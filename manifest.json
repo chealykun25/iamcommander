@@ -7,11 +7,6 @@
   "theme_color": "#0A0906",
   "icons": [
     {
-      "src": "/iamcommander/icons/phoenix-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    },
-    {
       "src": "/iamcommander/icons/phoenix-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
