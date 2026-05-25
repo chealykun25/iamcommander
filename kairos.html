@@ -101,7 +101,14 @@ textarea::placeholder{color:var(--stone)}
   </div>
 </div>
 
-<div class="modules-bar" id="modulesBar"></div>
+<div class="modules-bar" id="modulesBar" style="display:flex;gap:4px;padding:8px 20px;border-bottom:0.5px solid rgba(240,236,224,0.07);overflow-x:auto;background:#141210">
+  <a href="m1.html" style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:0.5px solid rgba(240,236,224,0.12);border-radius:2px;color:#8A7A60;text-decoration:none;white-space:nowrap">Morning Briefing</a>
+  <a href="m2.html" style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:0.5px solid rgba(240,236,224,0.12);border-radius:2px;color:#8A7A60;text-decoration:none;white-space:nowrap">Relationships</a>
+  <a href="m3.html" style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:0.5px solid rgba(240,236,224,0.12);border-radius:2px;color:#8A7A60;text-decoration:none;white-space:nowrap">Decision Engine</a>
+  <a href="m4.html" style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:0.5px solid rgba(240,236,224,0.12);border-radius:2px;color:#8A7A60;text-decoration:none;white-space:nowrap">Direction Correction</a>
+  <a href="m5.html" style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:0.5px solid rgba(240,236,224,0.12);border-radius:2px;color:#8A7A60;text-decoration:none;white-space:nowrap">Partner Portal</a>
+  <a href="m6.html" style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:0.5px solid rgba(240,236,224,0.12);border-radius:2px;color:#C9A96E;border-color:rgba(201,169,110,0.3);text-decoration:none;white-space:nowrap">Legacy Vault</a>
+</div>
 
 <div class="chat-wrap" id="chatWrap">
   <div class="kairos-head">
@@ -190,27 +197,7 @@ let mode = 'strategy';
 let history = [];
 let busy = false;
 
-const MODULES = [
-  {id:'module-1-morning-briefing', label:'Morning Briefing'},
-  {id:'module-2-relationship-intelligence', label:'Relationships'},
-  {id:'module-3-decision-engine', label:'Decision Engine'},
-  {id:'module-4-direction-correction', label:'Direction Correction'},
-  {id:'module-5-partner-portal', label:'Partner Portal'},
-  {id:'module-6-legacy-vault', label:'Legacy Vault'},
-  {id:'module-7-kairos-command-interface', label:'Kairos', active:true},
-];
-
-// Build modules bar
-const bar = document.getElementById('modulesBar');
-MODULES.forEach(m => {
-  const btn = document.createElement('button');
-  btn.className = 'mod-btn' + (m.active ? ' k7' : '');
-  btn.textContent = m.label;
-  btn.onclick = () => {
-    if(window.__nav) window.__nav(m.id);
-  };
-  bar.appendChild(btn);
-});
+// Module nav now uses static HTML links
 
 // Days counter
 const d = Math.ceil((new Date('2036-06-01') - new Date()) / 86400000);
@@ -316,9 +303,7 @@ function autoResize(el) {
 }
 
 // Back button
-document.getElementById('backBtn').onclick = () => {
-  if (window.__nav) window.__nav('screen-1-command-face');
-};
+document.getElementById('backBtn').onclick = function(){ location.href='index.html'; };
 </script>
 </body>
 </html>
