@@ -91,7 +91,7 @@ textarea::placeholder{color:var(--stone)}
 <body>
 <div class="topbar">
   <div class="tb-left">
-    <button class="back-btn" id="backBtn">← Command</button>
+    <button class="back-btn" id="backBtn" onclick="location.href='index.html'">← Command</button>
     <span class="tb-title"><em style="font-family:var(--serif);font-style:italic;color:var(--gold)">Kairos</em> — Private Counsel</span>
   </div>
   <div class="mode-pills">
@@ -303,7 +303,7 @@ function autoResize(el) {
 }
 
 // Back button
-document.getElementById('backBtn').onclick = function(){ location.href='index.html'; };
+// back button uses onclick attribute directly
 </script>
 </body>
 </html>
