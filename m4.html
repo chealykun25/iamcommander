@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+  <link rel="manifest" href="/iamcommander/manifest.json">
+  <meta name="theme-color" content="#0A0906">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Commander">
+  <link rel="apple-touch-icon" href="/iamcommander/icons/phoenix-icon.svg"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Module 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--bg:#F9F8F5;--surface:#FFFFFF;--s2:#F3F1EA;--s3:#EAE7DC;--ink:#0B0A08;--dim:#4A4740;--faint:#8A8780;--gold:#9A7230;--gold-lt:#C49A42;--gold-pale:rgba(154,114,48,0.07);--gold-b:rgba(154,114,48,0.22);--teal:#0A6358;--teal-pale:rgba(10,99,88,0.07);--teal-b:rgba(10,99,88,0.22);--violet:#3D2FC0;--red:#A81A1A;--red-pale:rgba(168,26,26,0.06);--sage:#186332;--sage-pale:rgba(24,99,50,0.07);--sage-b:rgba(24,99,50,0.22);--amber:#7A4A00;--border:rgba(11,10,8,0.08);--border2:rgba(11,10,8,0.15);--dark:#0B0A08;--cream:#EDE7D8;--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace}body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;font-size:14px}
+.topnav{background:var(--dark);height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid rgba(237,231,216,0.1)}
+.tn-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:var(--cream)}
+.tn-r{font-family:var(--mono);font-size:10px;color:rgba(237,231,216,0.35)}
+.pg-head{padding:28px 24px 20px;border-bottom:0.5px solid var(--border)}
+.pg-eye{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+.pg-title{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--ink)}.pg-title em{color:var(--gold);font-style:italic}
+.section{padding:18px 24px;border-bottom:0.5px solid var(--border)}
+.sec-eye{font-family:var(--mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:8px}
+.card-eye{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.card-title{font-family:var(--serif);font-size:16px;color:var(--ink);margin-bottom:6px}.card-title em{color:var(--gold);font-style:italic}
+.card-body{font-size:12px;color:var(--dim);line-height:1.7}
+.card-body strong{color:var(--ink);font-weight:500}
+.sentence-list{display:flex;flex-direction:column;gap:6px}
+.sentence{display:grid;grid-template-columns:22px 1fr;gap:8px;padding:8px 12px;background:var(--surface);border:0.5px solid var(--border);border-left:2px solid;border-radius:0 5px 5px 0}
+.s-num{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--gold)}
+.s-text{font-size:11px;color:var(--dim);line-height:1.5}
+.s-text strong{color:var(--ink);font-weight:500}
+.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mode{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:13px 14px}
+.mode-eye{font-family:var(--mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.mode-name{font-family:var(--serif);font-size:17px;color:var(--ink);margin-bottom:5px}.mode-name em{color:var(--gold);font-style:italic}
+.mode-desc{font-size:11px;color:var(--dim);line-height:1.55}
+.axis-list{display:flex;flex-direction:column;gap:5px}
+.axis{display:grid;grid-template-columns:26px 120px 1fr;gap:8px;align-items:center;padding:8px 12px;background:var(--surface);border:0.5px solid var(--border);border-radius:5px}
+.axis-n{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--gold)}
+.axis-name{font-size:11px;font-weight:500;color:var(--ink)}
+.axis-desc{font-size:10px;color:var(--dim);line-height:1.4}
+.engine-list{display:flex;flex-direction:column;gap:5px}
+.engine{background:var(--surface);border:0.5px solid var(--border);border-left:2px solid;border-radius:0 5px 5px 0;padding:10px 13px}
+.eng-tag{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:3px}
+.eng-name{font-family:var(--serif);font-size:15px;color:var(--ink);margin-bottom:3px}
+.eng-desc{font-size:11px;color:var(--dim);line-height:1.5}
+.vault-items{display:flex;flex-direction:column;gap:5px}
+.vault-item{background:var(--surface);border:0.5px solid var(--border);border-left:2px solid var(--gold);border-radius:0 5px 5px 0;padding:10px 13px}
+.vi-name{font-size:12px;font-weight:400;color:var(--ink);margin-bottom:3px}
+.vi-desc{font-size:10px;color:var(--dim);line-height:1.5}
+.vi-seal{font-family:var(--mono);font-size:9px;color:var(--faint);margin-top:5px}
+.footer{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--dark);border-top:0.5px solid rgba(237,231,216,0.1)}
+.foot-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:rgba(237,231,216,0.3)}
+.ft{font-family:var(--mono);font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em;background:rgba(237,231,216,0.06);color:rgba(237,231,216,0.3)}
+</style></head><body>
+<div class="topnav"><span class="tn-brand">I AM COMMANDER · MODULE 4</span><span class="tn-r" id="t" class="clock-el">04:00</span></div>
+<div id="content"></div>
+<div class="footer"><span class="foot-brand">I Am Commander · Module 4 · Kairos Intelligence</span><span class="ft" id="fd">3660 D</span></div>
+<script>
+const MODULES=[
+{eye:'Module 1 · Kairos Intelligence',title:'Morning <em>Briefing</em>',intro:'Five sentences. Delivered at 04:00. Every sentence has a purpose. Read all five — especially sentence three.',content:`
+<div class="section"><p class="sec-eye">Today's Briefing · Sample Format</p>
+<div class="sentence-list">
+<div class="sentence" style="border-left-color:var(--sage)"><span class="s-num">1</span><p class="s-text"><strong>Progress anchor:</strong> Yesterday you completed the PROVENANCE VERIFIED™ research and confirmed the USPTO TEAS Plus filing path. Veritan, Inc. formation is next.</p></div>
+<div class="sentence" style="border-left-color:var(--gold)"><span class="s-num">2</span><p class="s-text"><strong>Critical action:</strong> File PROVENANCE VERIFIED™ as a certification mark at USPTO today — Class 042+014, 00. This is the most important single filing in the plan. Before GitHub.</p></div>
+<div class="sentence" style="border-left-color:var(--red)"><span class="s-num">3</span><p class="s-text"><strong>Drift to watch:</strong> Karona meets the 4M Cambodia lead today. The 0M proposal is above market. If she returns without a counter, authorize 4M floor before end of day.</p></div>
+<div class="sentence" style="border-left-color:var(--teal)"><span class="s-num">4</span><p class="s-text"><strong>Relationship:</strong> Send Karona a warm message before her meeting. She holds two critical threads — property and CHEA — without an MOU. She has earned direct acknowledgment.</p></div>
+<div class="sentence" style="border-left-color:var(--violet)"><span class="s-num">5</span><p class="s-text"><strong>Grounding:</strong> "The small number is my fire." 3,660 days. Each one is a compounding event. Today counts.</p></div>
+</div></div>
+<div class="section"><p class="sec-eye">Delivery Architecture</p>
+<div class="card"><p class="card-eye">Delivery</p><p class="card-title">04:00 push notification + WhatsApp eSIM</p><p class="card-body">Dedicated WhatsApp number — separate from personal and DIAMODIA numbers. Push notification to iPhone. <strong>Not email. Not SMS. Push first, WhatsApp backup.</strong> The briefing arrives before Phoenix reaches for the phone — it is waiting for her.</p></div>
+<div class="card"><p class="card-eye">Inputs that feed the briefing</p><p class="card-title">Five live data sources</p><p class="card-body"><strong>Yesterday's actions completed</strong> (from Screen 1 checkbox state) · <strong>Today's calendar</strong> (from Notion task tracker) · <strong>Module 3 Decision queue</strong> (open decisions) · <strong>Module 4 Drift signals</strong> (exceptions fired overnight) · <strong>Module 2 Relationship surface</strong> (who to touch today). All five compile by 03:45.</p></div></div>`},
+{eye:'Module 2 · Relationship Intelligence',title:'Relationship <em>Intelligence</em>',intro:'One person per day. One drafted message. The discipline of one prevents the paralysis of many.',content:`
+<div class="section"><p class="sec-eye">Today's Surface · Kong Karona</p>
+<div class="card" style="border-left:2px solid var(--gold)"><p class="card-eye">Surfaced by Kairos — trust 92 · last contact today · 2 open threads</p><p class="card-title"><em>Kong Karona</em></p><p class="card-body">Cambodia field director. Runs CHEA field operations <strong>without an MOU</strong>. Manages 4M property portfolio on behalf of Phoenix. Buying children's meals from her own salary. Meeting a 4M property lead today. <strong>Two of the most important open actions in the empire run through this one person.</strong> She needs a direct message from Phoenix today.</p></div></div>
+<div class="section"><p class="sec-eye">How the Surface Algorithm Works</p>
+<div class="card"><p class="card-eye">4 weighting factors</p><p class="card-title">Who gets surfaced and why</p><p class="card-body"><strong>Days since last contact:</strong> Relationships cooling past 30 days get weighted higher. <strong>Strategic importance:</strong> People who hold active threads in the 17 projects score higher. <strong>Life events:</strong> Birthdays, anniversaries, milestones. <strong>Trust score trend:</strong> If trust has dropped 10+ points in 30 days, that relationship surfaces regardless of recency. <strong>Only ONE person per day</strong> — the top score wins. Phoenix does not get a list. She gets a person.</p></div></div>
+<div class="section"><p class="sec-eye">The Cut-Off List · Never Surfaced</p>
+<div class="card" style="border-left:2px solid var(--red)"><p class="card-eye">Permanent cut-off · Module 2 never surfaces these names</p><p class="card-title">Protected by design</p><p class="card-body">Sister and brother-in-law are on the cut-off list. Kairos will never suggest reconnecting with these relationships unless Phoenix explicitly overrides the protection. The cut-off list protects Phoenix from her own kindness in moments of vulnerability. <strong>If Phoenix instructs Kairos to remove a name from the cut-off list, Kairos asks once to confirm. Then executes.</strong></p></div></div>`},
+{eye:'Module 3 · Decision Engine',title:'Decision <em>Engine</em>',intro:'Two options. Never three. Kairos always picks one and explains why. Not "it depends."',content:`
+<div class="section"><p class="sec-eye">The 4 Laws · Every Decision Passes Through These</p>
+<div class="axis-list">
+<div class="axis"><span class="axis-n">1</span><span class="axis-name">Function</span><p class="axis-desc">Does this solve the actual problem — or a comfortable approximation of it?</p></div>
+<div class="axis"><span class="axis-n">2</span><span class="axis-name">Flexibility</span><p class="axis-desc">Can it adapt as the empire scales from /bin/sh.05M to .8B without a full rebuild?</p></div>
+<div class="axis"><span class="axis-n">3</span><span class="axis-name">Alignment</span><p class="axis-desc">Does it serve the 10-year trajectory, or does it feel good today and cost more later?</p></div>
+<div class="axis"><span class="axis-n">4</span><span class="axis-name">Cost efficiency</span><p class="axis-desc">Best result per dollar, per hour, per unit of Phoenix's attention?</p></div>
+</div></div>
+<div class="section"><p class="sec-eye">Sample Decision · Cambodia Sale Floor</p>
+<div class="card" style="border-left:2px solid var(--gold)"><p class="card-eye">Decision · Open · Cambodia Sale</p><p class="card-title">Hold 0M or authorize <em>4M floor</em>?</p><p class="card-body"><strong>Option A — Hold 0M:</strong> Maintains original ask. Risk: deal collapse. Market is at 2–26M. Holding buys time but costs momentum. Score: Function 5 / Flexibility 4 / Alignment 4 / Cost 3 = 16/40.<br><br><strong>Option B — Authorize 4M floor (recommended):</strong> Matches market. Closes fast. 4M net proceeds unlock Path to Property strategy reset, DIAMODIA capital bridge, and empire transition. Score: Function 9 / Flexibility 8 / Alignment 9 / Cost 9 = 35/40.<br><br><strong>Kairos recommendation: Option B. Authorize 4M floor today. The additional M is not worth a failed deal that delays the 4M net by 12+ months.</strong></p></div></div>`},
+{eye:'Module 4 · Direction Correction',title:'Direction <em>Correction</em>',intro:'Kairos watches everything. When drift exceeds tolerance, the correction fires automatically — not just an alert. A fix.',content:`
+<div class="section"><p class="sec-eye">Active Exceptions · Drift Detected</p>
+<div class="sentence-list">
+<div class="sentence" style="border-left-color:var(--red)"><span class="s-num" style="color:var(--red)">i</span><p class="s-text"><strong>Path to Property · 8 months · 100+ offers · zero closes.</strong> Pattern: subject-to not working in Mountain Ridge zone. Correction: switch to traditional 20% down when Cambodia closes. 4M net makes this immediate.</p></div>
+<div class="sentence" style="border-left-color:var(--amber)"><span class="s-num" style="color:var(--amber)">ii</span><p class="s-text"><strong>Cambodia sale · 0M ask vs 2–26M market.</strong> Gap too large. Correction: authorize Karona to negotiate to 4M floor. Close this week. The 4M net is the release valve.</p></div>
+<div class="sentence" style="border-left-color:var(--amber)"><span class="s-num" style="color:var(--amber)">iii</span><p class="s-text"><strong>PROVENANCE VERIFIED™ not yet filed.</strong> GitHub launch blocked until this files. Correction: USPTO TEAS Plus today, 00. Legal priority date = today's date.</p></div>
+</div></div>
+<div class="section"><p class="sec-eye">Threshold Model · When Kairos Fires</p>
+<div class="axis-list">
+<div class="axis" style="border-left:2px solid var(--sage)"><span class="axis-n" style="color:var(--sage)">G</span><span class="axis-name" style="color:var(--sage)">Green</span><p class="axis-desc">Metric within 5% of trajectory. No action needed. Empire on track.</p></div>
+<div class="axis" style="border-left:2px solid var(--amber)"><span class="axis-n" style="color:var(--amber)">A</span><span class="axis-name" style="color:var(--amber)">Amber</span><p class="axis-desc">5–15% below trajectory. Flag raised. Correction plan drafted. 7 days to resolve.</p></div>
+<div class="axis" style="border-left:2px solid var(--red)"><span class="axis-n" style="color:var(--red)">R</span><span class="axis-name" style="color:var(--red)">Red</span><p class="axis-desc">15%+ below trajectory OR deadline missed. Exception fires. Escalation to Screen 1. 48 hours.</p></div>
+</div></div>`},
+{eye:'Module 5 · Partner Portal',title:'Partner <em>Portal</em>',intro:'Reports write themselves. Phoenix reviews and approves. No manual drafting.',content:`
+<div class="section"><p class="sec-eye">Three Report Types · Auto-Generated</p>
+<div class="card" style="border-left:2px solid var(--gold)"><p class="card-eye">DIAMODIA Investor Report · investors@veritan.to</p><p class="card-title">Wefunder quarterly + monthly updates</p><p class="card-body">Sourced from: Shopify revenue data · Wefunder commitment count · Supabase member records · Phase 1 burn actual vs ,700 ceiling. <strong>Phoenix reviews and approves before sending.</strong> Goes to investors@veritan.to. Format: clean, honest, no spin. Investors invested in the infrastructure thesis — report on infrastructure milestones first, jewelry revenue second.</p></div>
+<div class="card" style="border-left:2px solid var(--teal)"><p class="card-eye">CHEA Donor Report · Zeffy + Karona field data</p><p class="card-title">Impact report — quarterly</p><p class="card-body">Sourced from: Karona field photos and reports · Zeffy donation totals · Children served count · School attendance data from Kakot. <strong>Munica's name appears as Youth Director.</strong> TC's junior campaign results included. Published on cheainstitute.org. Clean, visual, honest about what the money did.</p></div>
+<div class="card" style="border-left:2px solid var(--sage)"><p class="card-eye">Family Financial Review · Dr. Piseth</p><p class="card-title">Household net worth · Quarterly</p><p class="card-body">Not operational detail — just the household picture. Current net worth position. DIAMODIA ARR trajectory. Cambodia sale status. Path to Property status. CHEA grants received. Shared at Friday alignment meeting. <strong>Two lions, shared treasury. This is the treasury report.</strong></p></div></div>`},
+{eye:'Module 6 · Legacy Vault',title:'Legacy <em>Vault</em>',intro:'This is not Kairos\'s space. This is Phoenix\'s. Every word here is in her voice.',content:`
+<div class="section"><p class="sec-eye">Sealed Contents · Never Shared Without Permission</p>
+<div class="vault-items">
+<div class="vault-item"><p class="vi-name">Letters to Munica PisethKun</p><p class="vi-desc">Letters sealed until specified dates — her 18th birthday (Dec 5, 2029), her Stanford acceptance, her first business, her first heartbreak. She will read these when the moment arrives. Not before.</p><p class="vi-seal">🔒 SEALED · Phoenix's voice only · Kairos may draft · Phoenix rewrites and signs</p></div>
+<div class="vault-item"><p class="vi-name">Letters to TC PisethKun</p><p class="vi-desc">Letters sealed for her 18th birthday (Oct 14, 2033), her first website beyond junior.cheainstitute.org, her first hire. The girl who built a website at age 10 will build empires.</p><p class="vi-seal">🔒 SEALED · Phoenix's voice only</p></div>
+<div class="vault-item"><p class="vi-name">Letters to Vongsa Thune PisethKun</p><p class="vi-desc">He starts kindergarten after summer 2026. He is the youngest. The empire will be different by the time he reads this. Tell him what it looked like at the beginning — from /bin/sh.05M.</p><p class="vi-seal">🔒 SEALED · Phoenix's voice only</p></div>
+<div class="vault-item"><p class="vi-name">Letters to Father · Age 73</p><p class="vi-desc">The deepest why. The man who survived a genocide alone, whose 12 family members were killed, who loves Phoenix's mother so much he will not leave her side. Write now. He is 73. Time is the only currency that cannot be refunded.</p><p class="vi-seal">🔒 SEALED · Write this week</p></div>
+<div class="vault-item"><p class="vi-name">Phoenix's Personal Journal</p><p class="vi-desc">Never shared. Never published. Not the book — this is what the book is made from. The real record of the fall and the rebuild.</p><p class="vi-seal">🔒 SEALED ALWAYS · Private · No AI reads this unless Phoenix asks for help</p></div>
+</div></div>
+<div class="section"><p class="sec-eye">The Rule That Never Changes</p>
+<div class="card" style="border-left:2px solid var(--gold)"><p class="card-eye">Vault protocol</p><p class="card-title">Kairos drafts. <em>Phoenix writes.</em></p><p class="card-body">Kairos can help Phoenix begin a letter when the words are hard to find. He drafts — she reads, rewrites, and signs. The final document contains not one sentence that Phoenix has not personally approved. <strong>The vault is the only place in the empire where Kairos is a tool, not an advisor.</strong> Phoenix is the author here.</p></div></div>`},
+{eye:'Module 7 · Kairos Command Interface',title:'<em>Kairos</em> Command Interface',intro:'Natural language access to the full empire. Ask anything. Kairos answers with full context.',content:`
+<div class="section"><p class="sec-eye">Kairos · Three Modes</p>
+<div class="mode-grid">
+<div class="mode" style="border-top:2px solid var(--gold)"><p class="mode-eye">Default</p><p class="mode-name"><em>Strategy</em> mode</p><p class="mode-desc">Business, capital, operations, decisions. Surgical. Numbers first. Push back when wrong. One or two options, never three. Firm recommendation, explained clearly.</p></div>
+<div class="mode" style="border-top:2px solid var(--teal)"><p class="mode-eye">Situational</p><p class="mode-name"><em>Counsel</em> mode</p><p class="mode-desc">Family, grief, father's health, relationships. Slower. Honest — never soft on truth — but listens longer before speaking. Warm when the moment requires it.</p></div>
+<div class="mode" style="border-top:2px solid var(--violet)"><p class="mode-eye">Situational</p><p class="mode-name"><em>Coach</em> mode</p><p class="mode-desc">Hard days, self-doubt, ambition pressure. Patient. Reflects what it hears before advising. Reminds Phoenix of her own track record before giving direction.</p></div>
+</div></div>
+<div class="section"><p class="sec-eye">Five AI Engines · DIAMODIA — V9</p>
+<div class="engine-list">
+<div class="engine" style="border-left-color:var(--gold)"><p class="eng-tag" style="color:var(--gold)">SOUL</p><p class="eng-name">Emotional connection · Brand identity</p><p class="eng-desc">The why underneath everything. The Cambodian heritage, the 60-year promise, the Chapter Book. Every customer interaction carries SOUL.</p></div>
+<div class="engine" style="border-left-color:var(--violet)"><p class="eng-tag" style="color:var(--violet)">ORACLE</p><p class="eng-name">60-year lifecycle management</p><p class="eng-desc">Manages 12–15 revenue events per member lifetime. Tracks anniversaries, upgrade windows, heirloom transfer timing. Knows when to reach out and what to offer.</p></div>
+<div class="engine" style="border-left-color:var(--teal)"><p class="eng-tag" style="color:var(--teal)">LEGACY</p><p class="eng-name">Chapter Book · Provenance · Memory</p><p class="eng-desc">The Chapter Book database. 126,525 records on Day 1. Every stone's journey. Every couple's story. The data that makes DIAMODIA irreplaceable.</p></div>
+<div class="engine" style="border-left-color:var(--sage)"><p class="eng-tag" style="color:var(--sage)">TRUTH</p><p class="eng-name">PROVENANCE VERIFIED™ · Certification</p><p class="eng-desc">The certification infrastructure. provenance.cx API. The MCP server. The open standard. Insurance and AI company data partnerships route through TRUTH.</p></div>
+<div class="engine" style="border-left-color:var(--amber)"><p class="eng-tag" style="color:var(--amber)">STANDARD</p><p class="eng-name">DIAMODIA Standard · IP management</p><p class="eng-desc">The classification system for DIAMODIA stones. Owned by Veritan, Inc. Licensable to other jewelers. The moat that earns infrastructure multiples.</p></div>
+</div></div>`}
+];
+const m=MODULES[4-1];
+document.getElementById('content').innerHTML=`<div class="pg-head"><p class="pg-eye">${m.eye}</p><p class="pg-title">${m.title}</p><p style="font-family:var(--serif);font-size:13px;font-style:italic;color:var(--faint);margin-top:6px">${m.intro}</p></div>${m.content}`;
+function calcD(){return Math.ceil((new Date('2036-06-01')-new Date())/86400000)}
+document.getElementById('fd').textContent=calcD()+' D';
+function tick(){const n=new Date(),h=String(n.getHours()).padStart(2,'0'),mn=String(n.getMinutes()).padStart(2,'0');document.getElementById('t').textContent=h+':'+mn;}
+tick();setInterval(tick,30000);
+</script>
+<a href="kairos.html" style="position:fixed;bottom:22px;right:18px;z-index:9999;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#9A7230);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;box-shadow:0 4px 20px rgba(201,169,110,0.4);text-decoration:none">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="#0A0906"/></svg>
+  <span style="font-family:Georgia,serif;font-size:8px;font-style:italic;color:#0A0906;letter-spacing:1px;margin-top:1px">Kairos</span>
+</a>
+
+<script>
+(function(){
+  function tick(){
+    var n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');
+    var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var str=h+':'+m+' '+days[n.getDay()];
+    document.querySelectorAll('.clock-el,[id="t"],[id="clk"]').forEach(function(e){e.textContent=str;});
+  }
+  tick(); setInterval(tick, 30000);
+  var d=Math.ceil((new Date('2036-06-01')-new Date())/86400000);
+  setTimeout(function(){
+    document.querySelectorAll('.days-left').forEach(function(e){e.textContent=d+' D';});
+    // Fix days in footer tags
+    document.querySelectorAll('.ft,.f-tag').forEach(function(e){
+      if(e.textContent.match(/\d{4}\s*D/)) e.textContent=d+' D';
+    });
+  }, 100);
+})();
+if('serviceWorker'in navigator) navigator.serviceWorker.register('/iamcommander/sw.js').catch(function(){});
+</script>
+</body></html>

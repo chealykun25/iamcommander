@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+  <link rel="manifest" href="/iamcommander/manifest.json">
+  <meta name="theme-color" content="#0A0906">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Commander">
+  <link rel="apple-touch-icon" href="/iamcommander/icons/phoenix-icon.svg"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>I Am Commander — People Layer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F9F8F5;--surface:#FFFFFF;--s2:#F3F1EA;--s3:#EAE7DC;--ink:#0B0A08;--dim:#4A4740;--faint:#8A8780;--gold:#9A7230;--gold-lt:#C49A42;--gold-pale:rgba(154,114,48,0.07);--gold-b:rgba(154,114,48,0.22);--teal:#0A6358;--teal-pale:rgba(10,99,88,0.07);--violet:#3D2FC0;--red:#A81A1A;--sage:#186332;--amber:#7A4A00;--border:rgba(11,10,8,0.08);--border2:rgba(11,10,8,0.15);--dark:#0B0A08;--cream:#EDE7D8;--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;font-size:14px}
+.topnav{background:var(--dark);height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid rgba(237,231,216,0.1)}
+.tn-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:var(--cream)}
+.tn-tabs{display:flex;gap:2px}
+.tn-tab{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(237,231,216,0.4);padding:5px 12px;cursor:pointer;border:none;border-bottom:1.5px solid transparent;background:none;transition:all .15s}
+.tn-tab:hover{color:var(--cream)}.tn-tab.active{color:var(--gold-lt);border-bottom-color:var(--gold-lt)}
+.tn-r{font-family:var(--mono);font-size:10px;color:rgba(237,231,216,0.35)}
+.pg-head{padding:28px 24px 20px;border-bottom:0.5px solid var(--border)}
+.pg-eye{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+.pg-title{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--ink)}.pg-title em{color:var(--gold);font-style:italic}
+.section{padding:18px 24px;border-bottom:0.5px solid var(--border)}
+.sec-eye{font-family:var(--mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+.daily-surface{background:var(--surface);border:0.5px solid var(--gold-b);border-left:2px solid var(--gold);border-radius:6px;padding:14px 16px}
+.ds-eye{font-family:var(--mono);font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.ds-name{font-family:var(--serif);font-size:22px;color:var(--ink);margin-bottom:4px}.ds-name em{color:var(--gold);font-style:italic}
+.ds-role{font-family:var(--mono);font-size:10px;color:var(--faint);margin-bottom:10px}
+.ds-reason{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:10px}
+.ds-draft{background:var(--s2);border-radius:4px;padding:10px 12px}
+.ds-draft-eye{font-family:var(--mono);font-size:8px;color:var(--faint);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.ds-draft-text{font-size:11px;color:var(--dim);line-height:1.6;font-style:italic}
+.people-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.person{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:12px 13px;cursor:pointer;transition:all .15s;position:relative}
+.person:hover{border-color:var(--border2);background:var(--s2)}.person.open{border-color:var(--border2)}
+.person-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.person-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;font-style:italic;font-weight:300;flex-shrink:0;color:var(--surface)}
+.person-meta{flex:1;padding-left:9px}
+.person-name{font-size:12px;font-weight:400;color:var(--ink);line-height:1.2}
+.person-role{font-family:var(--mono);font-size:8px;color:var(--faint);letter-spacing:.05em}
+.trust-score{text-align:right}
+.ts-val{font-family:var(--serif);font-size:18px;line-height:1}
+.ts-label{font-family:var(--mono);font-size:7.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+.trust-bar{height:2px;background:var(--s3);border-radius:1px;overflow:hidden;margin-bottom:7px}
+.trust-bar-fill{height:100%;border-radius:1px}
+.person-last{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--faint)}
+.person-detail{display:none;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border)}
+.person.open .person-detail{display:block}
+.pd-row{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px}
+.pd-k{color:var(--faint);font-family:var(--mono);font-size:9px}.pd-v{color:var(--ink);text-align:right;max-width:70%;font-size:10px}
+.pd-action{margin-top:7px;padding:7px 9px;background:var(--s2);border-radius:4px;font-size:10px;color:var(--dim);line-height:1.5}
+.pd-action-eye{font-family:var(--mono);font-size:8px;color:var(--faint);margin-bottom:3px;text-transform:uppercase;letter-spacing:.1em}
+.email-grid{display:flex;flex-direction:column;gap:5px}
+.em-row{background:var(--dark);border-radius:5px;padding:10px 14px;display:grid;grid-template-columns:200px 1fr;gap:12px;align-items:start}
+.em-addr{font-family:var(--mono);font-size:11px;color:var(--gold-lt)}
+.em-use{font-size:11px;color:rgba(237,231,216,0.55);line-height:1.5}
+.em-use strong{color:var(--cream)}
+.footer{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--dark);border-top:0.5px solid rgba(237,231,216,0.1)}
+.foot-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:rgba(237,231,216,0.3)}
+.foot-tags{display:flex;gap:6px}
+.ft{font-family:var(--mono);font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em}
+.ft-n{background:rgba(237,231,216,0.06);color:rgba(237,231,216,0.3)}
+.ft-g{background:rgba(10,99,88,0.15);color:rgba(45,195,175,0.8)}
+</style>
+</head><body>
+<div class="topnav">
+  <span class="tn-brand">I AM COMMANDER</span>
+  <div class="tn-tabs">
+    <button class="tn-tab" onclick="location.href='index.html'">Command</button><button class="tn-tab" onclick="location.href='s2.html'">Dashboard</button>
+    <button class="tn-tab" onclick="location.href='s3.html'">Precision OS</button><button class="tn-tab" onclick="location.href='s4.html'">Operations</button>
+    <button class="tn-tab active" onclick="location.href='s5.html'">People</button>
+  </div>
+  <span class="tn-r" id="t" class="clock-el">04:00</span>
+</div>
+<div class="pg-head">
+  <p class="pg-eye">Screen 5 · People Layer</p>
+  <p class="pg-title">Relationship <em>intelligence</em></p>
+</div>
+
+<div class="section">
+  <p class="sec-eye">Today's One Person · Module 2 Surface</p>
+  <div class="daily-surface">
+    <p class="ds-eye">Kairos · Relationship Intelligence · Daily surface</p>
+    <p class="ds-name"><em>Kong Karona</em></p>
+    <p class="ds-role">Cambodia field director · CHEA + Property management</p>
+    <p class="ds-reason">Karona is meeting a $24M Cambodia property lead today. She also holds the CHEA field operations without an MOU. Two critical open threads with one person. She funds children's meals from her own salary. She has earned a direct message from Phoenix today.</p>
+    <div class="ds-draft">
+      <p class="ds-draft-eye">Kairos draft · Edit before sending</p>
+      <p class="ds-draft-text">"Karona — I'm watching the $24M meeting today. Whatever happens, I want you to know I see what you do there without a system behind you. We're fixing that this week. MOU coming. Send me the report when you're done."</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p class="sec-eye">VIP Relationships · Inner Circle</p>
+  <div class="people-grid" id="people-grid"></div>
+</div>
+
+<div class="section" style="border-bottom:none">
+  <p class="sec-eye">Email Architecture · Integration Reference</p>
+  <div class="email-grid">
+    <div class="em-row"><span class="em-addr">phoenix@diamodia.com</span><span class="em-use"><strong>Insurance outreach · AI company partnerships · Press · Investor first contact.</strong> Named founder email builds trust. Use this for every conversation that matters.</span></div>
+    <div class="em-row"><span class="em-addr">press@diamodia.com</span><span class="em-use"><strong>All media and journalist contact.</strong> Dedicated press address. Phoenix responds personally — never a PR assistant.</span></div>
+    <div class="em-row"><span class="em-addr">hello@diamodia.com</span><span class="em-use"><strong>General customer inquiries · New member welcome · Co-Design follow-up.</strong> Apsara handles 70%. Phoenix approves high-value responses.</span></div>
+    <div class="em-row"><span class="em-addr">reset@diamodia.com</span><span class="em-use"><strong>Chapter Resets only. Sacred. Phoenix personally. Never automated. Never delegated.</strong> This is DIAMODIA's character test.</span></div>
+    <div class="em-row"><span class="em-addr">circle@diamodia.com</span><span class="em-use"><strong>Active Circle membership · Heritage Circle · Annual renewal inquiries.</strong></span></div>
+    <div class="em-row"><span class="em-addr">api@provenance.cx</span><span class="em-use"><strong>Developer and API integrations · MCP server inquiries.</strong> Insurance + AI company technical contacts. Deeper partnerships move to investors@veritan.to.</span></div>
+    <div class="em-row"><span class="em-addr">investors@veritan.to</span><span class="em-use"><strong>Reg CF investors · Series A pipeline · Insurance contracts · AI data partnerships.</strong> Door opened by DIAMODIA. Paperwork signed by Veritan.</span></div>
+    <div class="em-row"><span class="em-addr">legal@veritan.to</span><span class="em-use"><strong>Trademark filings · IP assignments · Contract review.</strong></span></div>
+  </div>
+</div>
+
+<div class="footer">
+  <span class="foot-brand">I Am Commander · People Layer · Kairos Intelligence</span>
+  <div class="foot-tags"><span class="ft ft-n">8 email channels</span><span class="ft ft-g" id="fd">3660 D</span></div>
+</div>
+<script>
+const P=[
+  {n:'Dr. Piseth Sim',r:'Husband · Co-commander',av:'P',c:'#0A6358',t:95,last:'Today',next:'Weekly financial alignment',action:'Homira domain separate. Share Cambodia update. Quarterly financial review Friday.'},
+  {n:'Kong Karona',r:'Cambodia field director',av:'K',c:'#9A7230',t:92,last:'Today',next:'$24M property lead report',action:'Send warm message today. Finalize MOU this week. Field report on $24M lead.'},
+  {n:'Munica PisethKun',r:'Eldest daughter · CHEA Youth',av:'M',c:'#186332',t:98,last:'Daily',next:'Stanford Pre-Collegiate prep',action:'Stanford summer 2026 logistics. CHEA Youth summer campaign. Impact report after campaign.'},
+  {n:'TC PisethKun',r:'Second daughter · CHEA Junior',av:'T',c:'#7A4A00',t:98,last:'Daily',next:'Junior campaign launch',action:'junior.cheainstitute.org live. Burberry resale delegation. Zeffy donation page setup.'},
+  {n:'Vongsa Thune',r:'Son · Age 4',av:'V',c:'#A81A1A',t:99,last:'Daily',next:'BASIS Phoenix North enrollment',action:'Kindergarten after summer 2026. Cord blood stored in Thailand. Longevity file.'},
+  {n:'Father · Age 73',r:'Deepest why · Longevity mission',av:'F',c:'#3D2FC0',t:99,last:'Recent',next:'Health check coordination',action:'HBP + diabetes managed. Liver cancer cured 10yrs. Connect with Dr. Piseth for longevity plan. Send gift.'},
+];
+const pg=document.getElementById('people-grid');
+P.forEach(p=>{
+  const el=document.createElement('div');el.className='person';
+  const tc=p.t>=90?'var(--sage)':p.t>=70?'var(--gold)':'var(--amber)';
+  el.innerHTML=`<div class="person-hd"><div class="person-avatar" style="background:${p.c}">${p.av}</div><div class="person-meta"><p class="person-name">${p.n}</p><p class="person-role">${p.r}</p></div><div class="trust-score"><p class="ts-val" style="color:${tc}">${p.t}</p><p class="ts-label">Trust</p></div></div><div class="trust-bar"><div class="trust-bar-fill" style="width:${p.t}%;background:${tc}"></div></div><div class="person-last"><span>Last: ${p.last}</span><span>Next: ${p.next}</span></div><div class="person-detail"><div class="pd-row"><span class="pd-k">Trust score</span><span class="pd-v">${p.t}/100</span></div><div class="pd-action"><p class="pd-action-eye">Kairos action</p>${p.action}</div></div>`;
+  el.onclick=()=>el.classList.toggle('open');
+  pg.appendChild(el);
+});
+function calcD(){return Math.ceil((new Date('2036-06-01')-new Date())/86400000)}
+document.getElementById('fd').textContent=calcD()+' D';
+function tick(){const n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');document.getElementById('t').textContent=h+':'+m;}
+tick();setInterval(tick,30000);
+</script>
+
+<a href="kairos.html" style="position:fixed;bottom:22px;right:18px;z-index:9999;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#9A7230);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;box-shadow:0 4px 20px rgba(201,169,110,0.4);text-decoration:none">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="#0A0906"/></svg>
+  <span style="font-family:Georgia,serif;font-size:8px;font-style:italic;color:#0A0906;letter-spacing:1px;margin-top:1px">Kairos</span>
+</a>
+
+<script>
+(function(){
+  function tick(){
+    var n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');
+    var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var str=h+':'+m+' '+days[n.getDay()];
+    document.querySelectorAll('.clock-el,[id="t"],[id="clk"]').forEach(function(e){e.textContent=str;});
+  }
+  tick(); setInterval(tick, 30000);
+  var d=Math.ceil((new Date('2036-06-01')-new Date())/86400000);
+  setTimeout(function(){
+    document.querySelectorAll('.days-left').forEach(function(e){e.textContent=d+' D';});
+    // Fix days in footer tags
+    document.querySelectorAll('.ft,.f-tag').forEach(function(e){
+      if(e.textContent.match(/\d{4}\s*D/)) e.textContent=d+' D';
+    });
+  }, 100);
+})();
+if('serviceWorker'in navigator) navigator.serviceWorker.register('/iamcommander/sw.js').catch(function(){});
+</script>
+</body></html>

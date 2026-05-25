@@ -1,0 +1,173 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+  <link rel="manifest" href="/iamcommander/manifest.json">
+  <meta name="theme-color" content="#0A0906">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Commander">
+  <link rel="apple-touch-icon" href="/iamcommander/icons/phoenix-icon.svg"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>I Am Commander — Precision OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F9F8F5;--surface:#FFFFFF;--s2:#F3F1EA;--s3:#EAE7DC;--ink:#0B0A08;--dim:#4A4740;--faint:#8A8780;--gold:#9A7230;--gold-lt:#C49A42;--gold-pale:rgba(154,114,48,0.07);--gold-b:rgba(154,114,48,0.22);--teal:#0A6358;--teal-pale:rgba(10,99,88,0.07);--teal-b:rgba(10,99,88,0.22);--violet:#3D2FC0;--red:#A81A1A;--red-pale:rgba(168,26,26,0.06);--red-b:rgba(168,26,26,0.2);--sage:#186332;--sage-pale:rgba(24,99,50,0.07);--sage-b:rgba(24,99,50,0.22);--amber:#7A4A00;--amber-pale:rgba(122,74,0,0.07);--amber-b:rgba(122,74,0,0.2);--border:rgba(11,10,8,0.08);--border2:rgba(11,10,8,0.15);--dark:#0B0A08;--cream:#EDE7D8;--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;font-size:14px}
+.topnav{background:var(--dark);height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid rgba(237,231,216,0.1)}
+.tn-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:var(--cream)}
+.tn-tabs{display:flex;gap:2px}
+.tn-tab{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(237,231,216,0.4);padding:5px 12px;cursor:pointer;border:none;border-bottom:1.5px solid transparent;background:none;transition:all .15s}
+.tn-tab:hover{color:var(--cream)}.tn-tab.active{color:var(--gold-lt);border-bottom-color:var(--gold-lt)}
+.tn-r{font-family:var(--mono);font-size:10px;color:rgba(237,231,216,0.35)}
+.pg-head{padding:28px 24px 20px;border-bottom:0.5px solid var(--border)}
+.pg-eye{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+.pg-title{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--ink)}.pg-title em{color:var(--gold);font-style:italic}
+.section{padding:18px 24px;border-bottom:0.5px solid var(--border)}
+.sec-eye{font-family:var(--mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+.phase-compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0}
+.ph-card{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:14px 16px}
+.ph-eye{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+.ph-title{font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:8px}.ph-title em{color:var(--gold);font-style:italic}
+.ph-rows{display:flex;flex-direction:column;gap:5px}
+.ph-row{display:grid;grid-template-columns:120px 1fr;gap:8px;font-size:11px;padding:5px 0;border-bottom:0.5px solid var(--border)}
+.ph-row:last-child{border-bottom:none}
+.ph-key{font-family:var(--mono);font-size:9px;color:var(--faint);padding-top:1px}.ph-val{color:var(--dim)}.ph-val strong{color:var(--ink);font-weight:500}
+.bright-lines{display:flex;flex-direction:column;gap:5px}
+.bl{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:start;padding:10px 12px;background:var(--surface);border:0.5px solid var(--border);border-left:2px solid var(--gold);border-radius:0 5px 5px 0}
+.bl-num{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--gold)}
+.bl-title{font-size:11px;color:var(--ink);font-weight:400;margin-bottom:3px}
+.bl-desc{font-size:10px;color:var(--dim);line-height:1.5}
+.bl-status{font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:2px;white-space:nowrap;align-self:flex-start}
+.st-open{background:var(--gold-pale);color:var(--gold)}
+.levers{display:flex;flex-direction:column;gap:5px}
+.lv{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:9px 12px;background:var(--surface);border:0.5px solid var(--border);border-left:2px solid;border-radius:0 5px 5px 0}
+.lv-div{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
+.lv-act{font-size:11px;color:var(--dim);line-height:1.5}.lv-act strong{color:var(--ink);font-weight:500}
+.lv-imp{font-family:var(--mono);font-size:10px;font-weight:500}
+.cad-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.cad-c{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:12px 13px}
+.cad-eye{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.cad-title{font-family:var(--serif);font-size:15px;color:var(--ink);margin-bottom:5px;font-style:italic}
+.cad-items{list-style:none;display:flex;flex-direction:column;gap:3px}
+.cad-items li{font-size:10px;color:var(--dim);line-height:1.4;padding-left:10px;position:relative}
+.cad-items li::before{content:'·';position:absolute;left:0;color:var(--faint)}
+.cad-stat{font-family:var(--mono);font-size:9px;margin-top:7px;font-weight:500}
+.footer{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--dark);border-top:0.5px solid rgba(237,231,216,0.1)}
+.foot-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:rgba(237,231,216,0.3)}
+.foot-tags{display:flex;gap:6px}
+.ft{font-family:var(--mono);font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em}
+.ft-n{background:rgba(237,231,216,0.06);color:rgba(237,231,216,0.3)}
+.ft-g{background:rgba(10,99,88,0.15);color:rgba(45,195,175,0.8)}
+</style>
+</head><body>
+<div class="topnav">
+  <span class="tn-brand">I AM COMMANDER</span>
+  <div class="tn-tabs">
+    <button class="tn-tab" onclick="location.href='index.html'">Command</button><button class="tn-tab" onclick="location.href='s2.html'">Dashboard</button>
+    <button class="tn-tab active" onclick="location.href='s3.html'">Precision OS</button>
+    <button class="tn-tab" onclick="location.href='s4.html'">Operations</button><button class="tn-tab" onclick="location.href='s5.html'">People</button>
+  </div>
+  <span class="tn-r" id="t" class="clock-el">04:00</span>
+</div>
+<div class="pg-head">
+  <p class="pg-eye">Screen 3 · Precision OS</p>
+  <p class="pg-title">The <em>cadence engine</em></p>
+</div>
+
+<div class="section">
+  <p class="sec-eye">Two-Phase Doctrine · V9</p>
+  <div class="phase-compare">
+    <div class="ph-card" style="border-left:2px solid var(--gold)">
+      <p class="ph-eye">Phase 1 · Months 0–9</p>
+      <p class="ph-title"><em>Pre-Funding</em></p>
+      <div class="ph-rows">
+        <div class="ph-row"><span class="ph-key">Team</span><span class="ph-val"><strong>Phoenix + Claude AI only</strong></span></div>
+        <div class="ph-row"><span class="ph-key">Monthly burn</span><span class="ph-val"><strong>$4,700</strong> · $42K ceiling</span></div>
+        <div class="ph-row"><span class="ph-key">AI stack</span><span class="ph-val"><strong>$339/month</strong> · replaces 30 employees</span></div>
+        <div class="ph-row"><span class="ph-key">Paid acquisition</span><span class="ph-val"><strong>$0</strong> · zero by design</span></div>
+        <div class="ph-row"><span class="ph-key">Engines live</span><span class="ph-val"><strong>SOUL + ORACLE + TRUTH v1</strong> · Day 1</span></div>
+        <div class="ph-row"><span class="ph-key">Infrastructure</span><span class="ph-val">126,525 import · GitHub · MCP · insurance email · Week 1</span></div>
+      </div>
+    </div>
+    <div class="ph-card" style="border-left:2px solid var(--teal)">
+      <p class="ph-eye">Phase 2 · Month 9+ · Post-Funding</p>
+      <p class="ph-title"><em>Post-Funding</em></p>
+      <div class="ph-rows">
+        <div class="ph-row"><span class="ph-key">Team</span><span class="ph-val"><strong>Phoenix + Claude AI + Technical Lead</strong></span></div>
+        <div class="ph-row"><span class="ph-key">Monthly burn</span><span class="ph-val"><strong>$52,000</strong> · 18-month runway on $1.5M</span></div>
+        <div class="ph-row"><span class="ph-key">Phoenix salary</span><span class="ph-val"><strong>$10,000/mo</strong> · $120K annual · Phase 2 first salary</span></div>
+        <div class="ph-row"><span class="ph-key">Paid acquisition</span><span class="ph-val"><strong>$20K/mo</strong> · TikTok + Meta + Pinterest + Google</span></div>
+        <div class="ph-row"><span class="ph-key">Engines</span><span class="ph-val"><strong>LEGACY v2 + STANDARD scale</strong> · Technical Lead builds</span></div>
+        <div class="ph-row"><span class="ph-key">Tech Lead cost</span><span class="ph-val"><strong>$11,000/mo</strong> · $132K annual</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p class="sec-eye">5 Bright Line Conditions — All Required Before Phase 2</p>
+  <div class="bright-lines">
+    <div class="bl"><span class="bl-num">1</span><div><p class="bl-title">Reg CF closes at $750K minimum</p><p class="bl-desc">Below this floor, Phase 1 extends. Business self-funds from inventory. Reg CF is acceleration capital, not survival capital.</p></div><span class="bl-status st-open">Open</span></div>
+    <div class="bl"><span class="bl-num">2</span><div><p class="bl-title">provenance.cx API handles 1,000 queries/day for 30 consecutive days</p><p class="bl-desc">Demonstrates real API demand before hiring someone to productionize it. Vanity metrics don't qualify.</p></div><span class="bl-status st-open">Open</span></div>
+    <div class="bl"><span class="bl-num">3</span><div><p class="bl-title">50 Gold Seal entries confirmed in Chapter Book database</p><p class="bl-desc">Proves the product works before scaling. Each entry is a real member, a real stone, a real relationship started.</p></div><span class="bl-status st-open">Open</span></div>
+    <div class="bl"><span class="bl-num">4</span><div><p class="bl-title">At least one insurance or AI company responds to outreach with a scheduled call</p><p class="bl-desc">Validates the infrastructure thesis has real market pull. One call is the bar — not a signed contract.</p></div><span class="bl-status st-open">Open</span></div>
+    <div class="bl"><span class="bl-num">5</span><div><p class="bl-title">DIAMODIA LLC to Veritan assignment complete + Mercury accounts funded</p><p class="bl-desc">All IP transferred. All entity infrastructure clean. Investors investing in Veritan, Inc. — not a jewelry store.</p></div><span class="bl-status st-open">Open</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <p class="sec-eye">This Week's 1% Levers · Highest Impact Per Division</p>
+  <div class="levers">
+    <div class="lv" style="border-left-color:var(--gold)"><span class="lv-div">Commerce</span><p class="lv-act"><strong>File PROVENANCE VERIFIED™</strong> — USPTO TEAS Plus, certification mark, Class 042+014. $700. Today.</p><span class="lv-imp" style="color:var(--red)">Critical</span></div>
+    <div class="lv" style="border-left-color:var(--gold)"><span class="lv-div">Commerce</span><p class="lv-act"><strong>Form Veritan, Inc.</strong> — Stripe Atlas, Delaware C-Corp, $500. Mercury bank account opens in 5–7 days.</p><span class="lv-imp" style="color:var(--sage)">+0.5%</span></div>
+    <div class="lv" style="border-left-color:var(--teal)"><span class="lv-div">Wealth</span><p class="lv-act"><strong>Authorize Karona</strong> — $24M floor negotiation on Cambodia property. $14M net release. This week.</p><span class="lv-imp" style="color:var(--amber)">Urgent</span></div>
+    <div class="lv" style="border-left-color:var(--violet)"><span class="lv-div">Commerce</span><p class="lv-act"><strong>Supabase setup</strong> — Create Chapter Book database. Begin 126,525 record import. May 26 target.</p><span class="lv-imp" style="color:var(--gold)">+0.4%</span></div>
+    <div class="lv" style="border-left-color:var(--sage)"><span class="lv-div">Institution</span><p class="lv-act"><strong>CHEA Karona MOU</strong> — One page. CHEA funds Kakot school. Karona provides quarterly field reports.</p><span class="lv-imp" style="color:var(--teal)">+0.3%</span></div>
+    <div class="lv" style="border-left-color:var(--amber)"><span class="lv-div">Authority</span><p class="lv-act"><strong>PhD enrollment</strong> — Email Cumberland + Liberty for Fall 2026 timeline confirmation.</p><span class="lv-imp" style="color:var(--gold)">+0.2%</span></div>
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none">
+  <p class="sec-eye">Rockefeller Cadence · The Full Rhythm</p>
+  <div class="cad-grid">
+    <div class="cad-c"><p class="cad-eye">Daily · 04:00</p><p class="cad-title">The morning</p><ul class="cad-items"><li>Module 1 briefing</li><li>Screen 1 ring check</li><li>Exceptions review</li><li>1% action execute</li><li>21:00 evening log</li></ul><p class="cad-stat" style="color:var(--sage)">● Active</p></div>
+    <div class="cad-c"><p class="cad-eye">Weekly · Friday</p><p class="cad-title">The review</p><ul class="cad-items"><li>6 division metrics</li><li>Phase 1 burn check</li><li>Exception resolution</li><li>Relationship touch</li><li>Piseth alignment</li></ul><p class="cad-stat" style="color:var(--faint)">○ Scheduled</p></div>
+    <div class="cad-c"><p class="cad-eye">Monthly · Day 30</p><p class="cad-title">The close</p><ul class="cad-items"><li>Revenue vs projection</li><li>Burn vs ceiling</li><li>Bright Line progress</li><li>Karona field report</li><li>Investor update</li></ul><p class="cad-stat" style="color:var(--faint)">○ Day 30</p></div>
+    <div class="cad-c"><p class="cad-eye">Phase Gate · Feb 2027</p><p class="cad-title">The decision</p><ul class="cad-items"><li>All 5 Bright Lines</li><li>Reg CF $750K min</li><li>Technical Lead hired</li><li>Phase 2 begins</li><li>Burn → $52K/mo</li></ul><p class="cad-stat" style="color:var(--faint)">○ Day 270</p></div>
+  </div>
+</div>
+
+<div class="footer">
+  <span class="foot-brand">I Am Commander · Precision OS · Kairos Intelligence</span>
+  <div class="foot-tags"><span class="ft ft-n">5 bright lines</span><span class="ft ft-g" id="fd">3660 D</span></div>
+</div>
+<script>
+function calcD(){return Math.ceil((new Date('2036-06-01')-new Date())/86400000)}
+document.getElementById('fd').textContent=calcD()+' D';
+function tick(){const n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');document.getElementById('t').textContent=h+':'+m;}
+tick();setInterval(tick,30000);
+</script>
+
+<a href="kairos.html" style="position:fixed;bottom:22px;right:18px;z-index:9999;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#9A7230);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;box-shadow:0 4px 20px rgba(201,169,110,0.4);text-decoration:none">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="#0A0906"/></svg>
+  <span style="font-family:Georgia,serif;font-size:8px;font-style:italic;color:#0A0906;letter-spacing:1px;margin-top:1px">Kairos</span>
+</a>
+
+<script>
+(function(){
+  function tick(){
+    var n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');
+    var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var str=h+':'+m+' '+days[n.getDay()];
+    document.querySelectorAll('.clock-el,[id="t"],[id="clk"]').forEach(function(e){e.textContent=str;});
+  }
+  tick(); setInterval(tick, 30000);
+  var d=Math.ceil((new Date('2036-06-01')-new Date())/86400000);
+  setTimeout(function(){
+    document.querySelectorAll('.days-left').forEach(function(e){e.textContent=d+' D';});
+    // Fix days in footer tags
+    document.querySelectorAll('.ft,.f-tag').forEach(function(e){
+      if(e.textContent.match(/\d{4}\s*D/)) e.textContent=d+' D';
+    });
+  }, 100);
+})();
+if('serviceWorker'in navigator) navigator.serviceWorker.register('/iamcommander/sw.js').catch(function(){});
+</script>
+</body></html>

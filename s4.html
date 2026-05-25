@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+  <link rel="manifest" href="/iamcommander/manifest.json">
+  <meta name="theme-color" content="#0A0906">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Commander">
+  <link rel="apple-touch-icon" href="/iamcommander/icons/phoenix-icon.svg"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>I Am Commander — Operations Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F9F8F5;--surface:#FFFFFF;--s2:#F3F1EA;--s3:#EAE7DC;--ink:#0B0A08;--dim:#4A4740;--faint:#8A8780;--gold:#9A7230;--gold-lt:#C49A42;--gold-pale:rgba(154,114,48,0.07);--gold-b:rgba(154,114,48,0.22);--teal:#0A6358;--teal-pale:rgba(10,99,88,0.07);--teal-b:rgba(10,99,88,0.22);--violet:#3D2FC0;--violet-pale:rgba(61,47,192,0.06);--red:#A81A1A;--red-pale:rgba(168,26,26,0.06);--sage:#186332;--sage-pale:rgba(24,99,50,0.07);--amber:#7A4A00;--amber-pale:rgba(122,74,0,0.07);--amber-b:rgba(122,74,0,0.2);--border:rgba(11,10,8,0.08);--border2:rgba(11,10,8,0.15);--dark:#0B0A08;--cream:#EDE7D8;--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;font-size:14px}
+.topnav{background:var(--dark);height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid rgba(237,231,216,0.1)}
+.tn-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:var(--cream)}
+.tn-tabs{display:flex;gap:2px}
+.tn-tab{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(237,231,216,0.4);padding:5px 12px;cursor:pointer;border:none;border-bottom:1.5px solid transparent;background:none;transition:all .15s}
+.tn-tab:hover{color:var(--cream)}.tn-tab.active{color:var(--gold-lt);border-bottom-color:var(--gold-lt)}
+.tn-r{font-family:var(--mono);font-size:10px;color:rgba(237,231,216,0.35)}
+.pg-head{padding:24px 24px 18px;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end}
+.pg-title-wrap{}.pg-eye{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+.pg-title{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--ink)}.pg-title em{color:var(--gold);font-style:italic}
+.summary{display:flex;gap:12px}
+.sum-item{text-align:center}
+.sum-val{font-family:var(--serif);font-size:22px;color:var(--ink);line-height:1}
+.sum-label{font-family:var(--mono);font-size:8px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+.filter-row{display:flex;gap:5px;padding:12px 24px;border-bottom:0.5px solid var(--border);overflow-x:auto}
+.fb{font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border2);cursor:pointer;background:none;color:var(--faint);transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.fb:hover{background:var(--s2)}.fb.active{background:var(--surface);color:var(--ink);border-color:var(--border2);font-weight:500}
+.fb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ops-body{padding:16px 24px}
+.div-section{margin-bottom:20px}
+.div-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:7px;border-bottom:0.5px solid var(--border)}
+.dh-dot{width:9px;height:9px;border-radius:50%}.dh-name{font-size:13px;font-weight:400;color:var(--ink);flex:1}
+.dh-ct{font-family:var(--mono);font-size:9px;color:var(--faint);padding:2px 7px;background:var(--s2);border-radius:2px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:11px 13px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--border2);background:var(--s2)}.card.open{border-color:var(--border2)}
+.card-tb{position:absolute;top:0;left:0;right:0;height:1.5px}
+.card-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:7px;margin-top:3px}
+.card-code{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--faint)}
+.card-badges{display:flex;align-items:center;gap:5px}
+.drift-dot{width:6px;height:6px;border-radius:50%}
+.badge{font-family:var(--mono);font-size:8px;padding:2px 5px;border-radius:2px}
+.st-active{background:var(--sage-pale);color:var(--sage)}
+.st-pending{background:var(--amber-pale);color:var(--amber)}
+.st-dormant{background:var(--s2);color:var(--faint)}
+.card-name{font-size:12px;font-weight:400;color:var(--ink);margin-bottom:4px;line-height:1.3}
+.card-kpi{font-family:var(--serif);font-size:18px;color:var(--ink);line-height:1}
+.card-ksub{font-family:var(--mono);font-size:8px;color:var(--faint);margin-bottom:7px}
+.card-bar{height:2px;background:var(--s3);border-radius:1px;overflow:hidden}
+.card-bar-fill{height:100%;border-radius:1px}
+.card-detail{display:none;margin-top:9px;padding-top:9px;border-top:0.5px solid var(--border)}
+.card.open .card-detail{display:block}
+.det-row{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px}
+.det-k{color:var(--faint);font-family:var(--mono);font-size:9px}
+.det-v{color:var(--ink);font-weight:400;text-align:right;max-width:65%}
+.next-action{margin-top:7px;padding:8px 10px;background:var(--s2);border-radius:4px}
+.na-eye{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:3px}
+.na-text{font-size:10px;color:var(--dim);line-height:1.5}
+.footer{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--dark);border-top:0.5px solid rgba(237,231,216,0.1)}
+.foot-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:rgba(237,231,216,0.3)}
+.foot-tags{display:flex;gap:6px}
+.ft{font-family:var(--mono);font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em}
+.ft-n{background:rgba(237,231,216,0.06);color:rgba(237,231,216,0.3)}
+.ft-w{background:rgba(168,26,26,0.15);color:rgba(248,113,113,0.8)}
+.ft-g{background:rgba(10,99,88,0.15);color:rgba(45,195,175,0.8)}
+</style>
+</head><body>
+<div class="topnav">
+  <span class="tn-brand">I AM COMMANDER</span>
+  <div class="tn-tabs">
+    <button class="tn-tab" onclick="location.href='index.html'">Command</button><button class="tn-tab" onclick="location.href='s2.html'">Dashboard</button>
+    <button class="tn-tab" onclick="location.href='s3.html'">Precision OS</button>
+    <button class="tn-tab active" onclick="location.href='s4.html'">Operations</button>
+    <button class="tn-tab" onclick="location.href='s5.html'">People</button>
+  </div>
+  <span class="tn-r" id="t" class="clock-el">04:00</span>
+</div>
+<div class="pg-head">
+  <div class="pg-title-wrap">
+    <p class="pg-eye">Screen 4 · Operations Center</p>
+    <p class="pg-title">All <em>17 projects</em></p>
+  </div>
+  <div class="summary">
+    <div class="sum-item"><p class="sum-val">17</p><p class="sum-label">Total</p></div>
+    <div class="sum-item"><p class="sum-val" style="color:var(--sage)">11</p><p class="sum-label">Active</p></div>
+    <div class="sum-item"><p class="sum-val" style="color:var(--amber)">4</p><p class="sum-label">Pending</p></div>
+    <div class="sum-item"><p class="sum-val" style="color:var(--red)">3</p><p class="sum-label">Exceptions</p></div>
+  </div>
+</div>
+<div class="filter-row" id="filters"></div>
+<div class="ops-body" id="ops"></div>
+<div class="footer">
+  <span class="foot-brand">I Am Commander · Operations · Kairos Intelligence</span>
+  <div class="foot-tags"><span class="ft ft-n">17 systems</span><span class="ft ft-w">3 exceptions</span><span class="ft ft-g" id="fd">3660 D</span></div>
+</div>
+<script>
+const DIVS=[
+  {id:'commerce',name:'Luxury Commerce',color:'#9A7230',projects:[
+    {code:'B1',name:'DIAMODIA',status:'active',kpi:'Phase 1',ksub:'$4,700/mo burn',bar:8,drift:'a',milestone:'provenance.cx API live',mdate:'Jun 6 2026',owner:'Phoenix + Claude',action:'File PROVENANCE VERIFIED™ today · Form Veritan via Stripe Atlas · Supabase database May 26 · Insurance email May 27'},
+    {code:'B10',name:'Codex House — GEMARA',status:'pending',kpi:'$8M',ksub:'inventory value',bar:5,drift:'a',milestone:'Museum photography',mdate:'Month 1',owner:'Phoenix',action:'Brief photographer for 5 founding jewelry sets · Catalogue Cambolite stones separately'},
+    {code:'B11',name:'Codex House — SWG',status:'pending',kpi:'$0',ksub:'UHNW buyers',bar:2,drift:'a',milestone:'SWG portal built',mdate:'Month 4–6',owner:'Phoenix',action:'Design Codex AI persona · Build invitation-only portal · No connection to DIAMODIA brand'},
+    {code:'B16',name:'Burberry Market Builder',status:'pending',kpi:'Inventory',ksub:'jomashop stock',bar:0,drift:'g',milestone:'Munica + TC take over',mdate:'This month',owner:'Munica/TC',action:'Delegate US eBay/Poshmark resale to Munica and TC · They keep 70% · Teaching project'},
+  ]},
+  {id:'wealth',name:'Wealth Architecture',color:'#0A6358',projects:[
+    {code:'B3',name:'Cambodia Property Portfolio',status:'active',kpi:'$14M',ksub:'net at $24M sale',bar:35,drift:'r',milestone:'$24M lead closing',mdate:'This week',owner:'Kong Karona',action:'Authorize Karona to negotiate $24M floor · Close fast · Net $14M funds empire transition + home purchase'},
+    {code:'B4',name:'Multifamily Deal Architect',status:'dormant',kpi:'0 doors',ksub:'1,000 target',bar:0,drift:'g',milestone:'Year 2–3 activation',mdate:'2028',owner:'Phoenix',action:'No action yet · Activates after DIAMODIA cash flow established · Partner with Homira where properties align'},
+    {code:'B5',name:'Business Deal Analyzer',status:'dormant',kpi:'0 deals',ksub:'Year 4+',bar:0,drift:'g',milestone:'Year 4 first acquisition',mdate:'2030',owner:'Phoenix',action:'No action yet · Cash flow acquisition vehicle · Tax optimization · Year 4+ activation'},
+    {code:'B14',name:'Crypto Market Navigator',status:'active',kpi:'Held',ksub:'monitor only',bar:20,drift:'g',milestone:'Quarterly review',mdate:'Ongoing',owner:'Phoenix',action:'Hold remaining coins · No active trading · Review quarterly against market conditions'},
+  ]},
+  {id:'authority',name:'Personal Authority',color:'#7A4A00',projects:[
+    {code:'B7',name:'Author Empire — NY Bestseller',status:'active',kpi:'1 book',ksub:'live on Amazon',bar:15,drift:'g',milestone:'NYT campaign plan',mdate:'Q4 2026',owner:'Phoenix',action:'Build NYT strategy with publicist · Prepare second book outline — her story · Pen name: PHOENIX JOAILLIER'},
+    {code:'B8',name:'True Self Unlocked',status:'active',kpi:'Private',ksub:'sealed always',bar:100,drift:'g',milestone:'Daily journal',mdate:'Always',owner:'Phoenix',action:'Private safe space · Never commercialized · Sealed always · No external action'},
+    {code:'B12',name:'PhD Aid Guide',status:'active',kpi:'Applied',ksub:'Cumberland + Liberty',bar:20,drift:'a',milestone:'Enrollment confirmed',mdate:'2026–2027',owner:'Phoenix',action:'Email Cumberland + Liberty for Fall 2026 enrollment timeline · GIA Gemologist checklist also'},
+  ]},
+  {id:'legacy',name:'Family Legacy',color:'#186332',projects:[
+    {code:'B6',name:'Path to Property',status:'active',kpi:'$50K',ksub:'locked · 100+ offers',bar:6,drift:'r',milestone:'Home purchased',mdate:'Urgent',owner:'Phoenix',action:'Reset strategy: switch from subject-to to traditional 20% down when Cambodia closes · $14M net makes this easy'},
+    {code:'B9',name:'HeirForge Mastery',status:'active',kpi:'3 children',ksub:'Stanford + BASIS',bar:42,drift:'g',milestone:'Munica Stanford app Fall 2027',mdate:'2027',owner:'Phoenix + Piseth',action:'Munica: Stanford Pre-Collegiate summer 2026 ✓ · TC: CHEA junior campaign · Vongsa: BASIS Phoenix North kindergarten'},
+  ]},
+  {id:'institution',name:'Institution',color:'#A81A1A',projects:[
+    {code:'B2',name:'CHEA Institute',status:'active',kpi:'$0',ksub:'grants secured',bar:5,drift:'r',milestone:'Karona MOU signed',mdate:'This week',owner:'Karona / Munica / TC',action:'Sign Karona MOU · Launch Zeffy donation page · Publish Munica summer 2026 impact report · First grant application Q4 2026'},
+  ]},
+  {id:'tactical',name:'Tactical Support',color:'#4A4740',projects:[
+    {code:'B13',name:'Financial Aid Navigator',status:'active',kpi:'Active',ksub:'US system guide',bar:60,drift:'g',milestone:'Tax deadline tracking',mdate:'Ongoing',owner:'Phoenix',action:'Track IRS deadlines · insurance renewals · social security enrollment · cultural navigation support'},
+    {code:'B15',name:'Fit Fuel Coach',status:'active',kpi:'5 mi/day',ksub:'body = empire',bar:90,drift:'g',milestone:'Daily non-negotiable',mdate:'Daily',owner:'Phoenix',action:'Maintain · 5 miles minimum · some days 10 · Body is part of the empire infrastructure'},
+    {code:'B17',name:'Auto Lease Strategist',status:'active',kpi:'Palisade',ksub:'lease active',bar:70,drift:'g',milestone:'Renewal review',mdate:'At expiry',owner:'Phoenix',action:'Monitor lease terms · compare options at renewal time · no action needed now'},
+  ]},
+];
+const sigC={g:'#186332',a:'#7A4A00',r:'#A81A1A'};
+const stMap={active:'st-active',pending:'st-pending',dormant:'st-dormant'};
+const fRow=document.getElementById('filters'),ops=document.getElementById('ops');
+let activeF='all';
+function buildFilters(){
+  const all=document.createElement('button');all.className='fb active';all.textContent='All divisions';
+  all.onclick=()=>setF('all',all);fRow.appendChild(all);
+  DIVS.forEach(d=>{
+    const b=document.createElement('button');b.className='fb';
+    b.innerHTML=`<span class="fb-dot" style="background:${d.color}"></span>${d.name}`;
+    b.onclick=()=>setF(d.id,b);fRow.appendChild(b);
+  });
+}
+function setF(id,btn){activeF=id;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderOps();}
+function renderOps(){
+  ops.innerHTML='';
+  const toShow=activeF==='all'?DIVS:DIVS.filter(d=>d.id===activeF);
+  toShow.forEach(div=>{
+    const sec=document.createElement('div');sec.className='div-section';
+    sec.innerHTML=`<div class="div-hd"><div class="dh-dot" style="background:${div.color}"></div><span class="dh-name">${div.name}</span><span class="dh-ct">${div.projects.length}</span></div><div class="cards" id="cg-${div.id}"></div>`;
+    ops.appendChild(sec);
+    const grid=document.getElementById('cg-'+div.id);
+    div.projects.forEach(p=>{
+      const c=document.createElement('div');c.className='card';
+      c.innerHTML=`<div class="card-tb" style="background:${div.color}"></div><div class="card-hd"><span class="card-code">${p.code}</span><div class="card-badges"><div class="drift-dot" style="background:${sigC[p.drift]}"></div><span class="badge ${stMap[p.status]}">${p.status}</span></div></div><p class="card-name">${p.name}</p><p class="card-kpi">${p.kpi}</p><p class="card-ksub">${p.ksub}</p><div class="card-bar"><div class="card-bar-fill" style="width:${p.bar}%;background:${div.color}"></div></div><div class="card-detail"><div class="det-row"><span class="det-k">Next milestone</span><span class="det-v">${p.milestone}</span></div><div class="det-row"><span class="det-k">Target date</span><span class="det-v">${p.mdate}</span></div><div class="det-row"><span class="det-k">Owner</span><span class="det-v">${p.owner}</span></div><div class="next-action"><p class="na-eye">Next action</p><p class="na-text">${p.action}</p></div></div>`;
+      c.onclick=()=>c.classList.toggle('open');
+      grid.appendChild(c);
+    });
+  });
+}
+buildFilters();renderOps();
+function calcD(){return Math.ceil((new Date('2036-06-01')-new Date())/86400000)}
+document.getElementById('fd').textContent=calcD()+' D';
+function tick(){const n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');document.getElementById('t').textContent=h+':'+m;}
+tick();setInterval(tick,30000);
+</script>
+
+<a href="kairos.html" style="position:fixed;bottom:22px;right:18px;z-index:9999;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#9A7230);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;box-shadow:0 4px 20px rgba(201,169,110,0.4);text-decoration:none">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="#0A0906"/></svg>
+  <span style="font-family:Georgia,serif;font-size:8px;font-style:italic;color:#0A0906;letter-spacing:1px;margin-top:1px">Kairos</span>
+</a>
+
+<script>
+(function(){
+  function tick(){
+    var n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');
+    var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var str=h+':'+m+' '+days[n.getDay()];
+    document.querySelectorAll('.clock-el,[id="t"],[id="clk"]').forEach(function(e){e.textContent=str;});
+  }
+  tick(); setInterval(tick, 30000);
+  var d=Math.ceil((new Date('2036-06-01')-new Date())/86400000);
+  setTimeout(function(){
+    document.querySelectorAll('.days-left').forEach(function(e){e.textContent=d+' D';});
+    // Fix days in footer tags
+    document.querySelectorAll('.ft,.f-tag').forEach(function(e){
+      if(e.textContent.match(/\d{4}\s*D/)) e.textContent=d+' D';
+    });
+  }, 100);
+})();
+if('serviceWorker'in navigator) navigator.serviceWorker.register('/iamcommander/sw.js').catch(function(){});
+</script>
+</body></html>

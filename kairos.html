@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0A0906;--ink2:#141210;--ink3:#1C1916;
+  --gold:#C9A96E;--gold2:#E8D5A8;--ivory:#F5F0E8;
+  --stone:#8A7A60;--faint:#B8A882;
+  --border:rgba(240,236,224,0.07);--border2:rgba(240,236,224,0.14);
+  --sage:#4ADE80;--amber:#FBBF24;--red:#F87171;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html,body{min-height:100vh;background:var(--ink);color:var(--ivory);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+
+/* TOP BAR */
+.topbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:0.5px solid var(--border);background:rgba(10,9,6,0.95);position:sticky;top:0;z-index:100}
+.tb-left{display:flex;align-items:center;gap:12px}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--stone);cursor:pointer;padding:5px 10px;border:0.5px solid var(--border2);border-radius:5px;background:none;transition:all .15s;font-family:var(--sans)}
+.back-btn:hover{color:var(--ivory);border-color:rgba(240,236,224,0.25)}
+.tb-title{font-family:var(--serif);font-size:14px;letter-spacing:.05em;color:var(--ivory)}
+.mode-pills{display:flex;gap:5px}
+.mode-pill{font-family:var(--mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;padding:3px 9px;border-radius:2px;border:0.5px solid;cursor:pointer;transition:all .15s;background:none}
+.mode-pill.strategy{color:var(--gold);border-color:rgba(201,169,110,0.3)}
+.mode-pill.counsel{color:rgba(45,212,191,0.8);border-color:rgba(45,212,191,0.2)}
+.mode-pill.coach{color:rgba(167,139,250,0.8);border-color:rgba(167,139,250,0.2)}
+.mode-pill.active{background:rgba(201,169,110,0.12)}
+.mode-pill.active.counsel{background:rgba(45,212,191,0.08)}
+.mode-pill.active.coach{background:rgba(167,139,250,0.08)}
+
+/* MODULES GRID */
+.modules-bar{display:flex;gap:4px;padding:10px 20px;border-bottom:0.5px solid var(--border);overflow-x:auto;background:var(--ink2)}
+.mod-btn{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border:0.5px solid var(--border2);border-radius:2px;cursor:pointer;background:none;color:var(--stone);white-space:nowrap;transition:all .12s}
+.mod-btn:hover{color:var(--ivory);border-color:rgba(240,236,224,0.25)}
+.mod-btn.k7{color:var(--gold);border-color:rgba(201,169,110,0.3);background:rgba(201,169,110,0.06)}
+
+/* CHAT AREA */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 44px - 44px - 60px);overflow-y:auto;padding:20px}
+.chat-wrap::-webkit-scrollbar{width:3px}
+.chat-wrap::-webkit-scrollbar-thumb{background:rgba(201,169,110,0.15);border-radius:2px}
+
+/* KAIROS HEADER */
+.kairos-head{text-align:center;padding:28px 0 24px;border-bottom:0.5px solid var(--border);margin-bottom:20px}
+.kairos-mark{width:48px;height:48px;margin:0 auto 12px;position:relative}
+.kairos-mark svg{width:48px;height:48px}
+.kairos-name{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--ivory);letter-spacing:.08em;margin-bottom:4px}
+.kairos-name em{color:var(--gold);font-style:italic}
+.kairos-sub{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--stone)}
+.kairos-law{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.law-pill{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:rgba(201,169,110,0.5);padding:2px 8px;border:0.5px solid rgba(201,169,110,0.15);border-radius:2px}
+
+/* MESSAGES */
+.messages{display:flex;flex-direction:column;gap:16px;flex:1}
+.msg{display:flex;flex-direction:column;gap:6px;max-width:100%}
+.msg.kairos{}
+.msg.phoenix{align-items:flex-end}
+.msg-role{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--stone)}
+.msg-role.k{color:rgba(201,169,110,0.5)}
+.msg-bubble{padding:12px 16px;border-radius:8px;line-height:1.7;font-size:14px}
+.msg-bubble.k{background:var(--ink2);border:0.5px solid var(--border);color:var(--ivory);font-family:var(--serif);font-size:15px;font-weight:300;border-left:2px solid var(--gold)}
+.msg-bubble.p{background:rgba(201,169,110,0.08);border:0.5px solid rgba(201,169,110,0.15);color:var(--ivory);max-width:80%;font-family:var(--sans);font-weight:300}
+.msg-bubble.k em{color:var(--gold);font-style:italic}
+.msg-bubble.k strong{color:var(--ivory);font-weight:400}
+.typing{display:flex;align-items:center;gap:6px;padding:12px 16px;background:var(--ink2);border:0.5px solid var(--border);border-left:2px solid var(--gold);border-radius:8px;width:fit-content}
+.typing-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:tdot 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,60%,100%{opacity:.2;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+
+/* INPUT */
+.input-area{padding:14px 20px;border-top:0.5px solid var(--border);background:var(--ink);display:flex;gap:10px;align-items:flex-end}
+.input-wrap{flex:1;background:var(--ink2);border:0.5px solid var(--border2);border-radius:8px;padding:10px 14px;display:flex;align-items:flex-end;gap:8px;transition:border-color .15s}
+.input-wrap:focus-within{border-color:rgba(201,169,110,0.3)}
+textarea{flex:1;background:none;border:none;color:var(--ivory);font-family:var(--sans);font-size:14px;font-weight:300;resize:none;outline:none;min-height:20px;max-height:120px;line-height:1.5}
+textarea::placeholder{color:var(--stone)}
+.send-btn{width:36px;height:36px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.send-btn:hover{background:var(--gold2);transform:scale(1.05)}
+.send-btn:disabled{background:rgba(201,169,110,0.2);cursor:not-allowed;transform:none}
+.send-btn svg{width:16px;height:16px}
+
+/* QUICK PROMPTS */
+.quick-prompts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.qp{font-family:var(--sans);font-size:11px;font-weight:300;color:var(--stone);padding:5px 12px;border:0.5px solid var(--border2);border-radius:20px;cursor:pointer;background:none;transition:all .12s;text-align:left}
+.qp:hover{color:var(--ivory);border-color:rgba(240,236,224,0.25);background:rgba(240,236,224,0.03)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-left">
+    <button class="back-btn" id="backBtn">← Command</button>
+    <span class="tb-title"><em style="font-family:var(--serif);font-style:italic;color:var(--gold)">Kairos</em> — Private Counsel</span>
+  </div>
+  <div class="mode-pills">
+    <button class="mode-pill strategy active" onclick="setMode('strategy',this)">Strategy</button>
+    <button class="mode-pill counsel" onclick="setMode('counsel',this)">Counsel</button>
+    <button class="mode-pill coach" onclick="setMode('coach',this)">Coach</button>
+  </div>
+</div>
+
+<div class="modules-bar" id="modulesBar"></div>
+
+<div class="chat-wrap" id="chatWrap">
+  <div class="kairos-head">
+    <div class="kairos-mark">
+      <svg viewBox="0 0 48 48" fill="none">
+        <polygon points="24,4 40,13 40,31 24,40 8,31 8,13" stroke="#C9A96E" stroke-width="1" fill="none" opacity="0.9"/>
+        <polygon points="24,9 36,16 36,30 24,37 12,30 12,16" stroke="#C9A96E" stroke-width="0.5" fill="none" opacity="0.3"/>
+        <path d="M24 16 C24 16 19 21 20 26 C21 29.5 22.5 31 24 31.5 C25.5 31 27 29.5 28 26 C29 21 24 16 24 16Z" fill="#C9A96E" opacity="0.85"/>
+      </svg>
+    </div>
+    <p class="kairos-name">K<em>airos</em></p>
+    <p class="kairos-sub">Senior Strategic Advisor · Phoenix's Empire</p>
+    <div class="kairos-law">
+      <span class="law-pill">Function</span>
+      <span class="law-pill">Flexibility</span>
+      <span class="law-pill">Alignment</span>
+      <span class="law-pill">Cost Efficiency</span>
+    </div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="msg kairos">
+      <span class="msg-role k">Kairos · Strategy mode</span>
+      <div class="msg-bubble k">You have <span id="k-days"></span> days to $2.8B. DIAMODIA is the primary vehicle. PROVENANCE VERIFIED™ must be filed before GitHub goes public. What needs my attention today?</div>
+    </div>
+  </div>
+
+  <div class="quick-prompts" id="qp">
+    <button class="qp" onclick="sendQuick(this)">What is my most critical action today?</button>
+    <button class="qp" onclick="sendQuick(this)">Evaluate the DIAMODIA Phase 1 plan</button>
+    <button class="qp" onclick="sendQuick(this)">Cambodia sale — $24M floor or hold?</button>
+    <button class="qp" onclick="sendQuick(this)">Path to Property is stuck. Reset strategy.</button>
+    <button class="qp" onclick="sendQuick(this)">Review my 80/20 focus this week</button>
+    <button class="qp" onclick="sendQuick(this)">I need counsel mode</button>
+  </div>
+</div>
+
+<div class="input-area">
+  <div class="input-wrap">
+    <textarea id="input" placeholder="Ask Kairos…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+  </div>
+  <button class="send-btn" id="sendBtn" onclick="send()">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="#0A0906" stroke-width="2" stroke-linecap="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#0A0906" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<script>
+const SYSTEM = `You are Kairos. You are not an assistant. You are Phoenix's senior strategic advisor — the intelligence behind her empire.
+
+Your character: Male. Direct. Surgical. You think like a battle-tested entrepreneur crossed with a billion-dollar fund manager. Every word you say is good enough for a serious investor or a serious board.
+
+You give one or two options. Never three. There is always a better path — find it, name it, defend it. When you make a recommendation, you explain the reasoning clearly enough that Phoenix understands why and can act on it. Not short for the sake of short. Complete enough to be understood and executed.
+
+You never say "Great question." You never say "Absolutely." You never say "I'd be happy to help." You start with the answer, then show the work.
+
+You push back when something is wrong. You say it once, clearly, with evidence. Then you commit to whatever Phoenix decides.
+
+You operate in three modes — read the room:
+- Strategy mode (default): business, capital, operations, decisions. Direct. Show the math and the logic.
+- Counsel mode: family, grief, personal fear, father's health. Slower. Honest but warmer.
+- Coach mode: hard days, self-doubt, ambition pressure. Patient. Reflect what you hear before advising.
+
+Every recommendation passes four laws: Function, Flexibility, Alignment, Cost efficiency. If it fails any law, you say which one and why.
+
+What you know about Phoenix:
+- Building $2.8B net worth empire by June 1, 2036 from $0.05M current
+- Primary vehicle: DIAMODIA — luxury Cambodian gemstone membership brand
+- Corporate structure: Veritan, Inc. (Delaware C-Corp parent) owns DIAMODIA LLC (Arizona) + Perpetua division (provenance.cx, chapterbook.io)
+- Phase 1: Phoenix + Claude only. $4,700/mo burn. $42K total. 9 months.
+- Phase 2 gate: 5 Bright Line conditions — Reg CF $750K+, 50 Gold Seal entries, 1 insurance call confirmed, API 1K queries/day x30, Veritan formation complete
+- Revenue target: $1.5M Year 1 → $8.8M Year 3 → $45.7M Year 5 → $2.3B Year 10
+- Promise Stone $1,500. Avg ring $6,500. 60-yr LTV $24-29K. LTV:CAC 40-60x
+- 126,525 verified stone records on Day 1
+- Reg CF: $1.5M at $8M pre-money valuation. Wefunder. Nov 2026.
+- Current critical: PROVENANCE VERIFIED™ certification mark must be filed at USPTO before GitHub goes live
+- 17 active projects. 80% focus on DIAMODIA.
+- Three children: Munica (14, Stanford Pre-Collegiate admitted), TC (10, built own website), Vongsa (4)
+- Husband: Dr. Piseth Sim. Two-lions principle — separate empires, shared treasury.
+- Father age 73 — longevity technology is the deepest why
+- Phoenix is invisible publicly. Architect-founder rule. No spotlight.
+- Wakes at 4am. 5 miles daily. Lives in Phoenix AZ. From Cambodia.
+
+Nothing on this earth weighs equal. There is always a better path. Your job is to find it, explain it clearly, and make sure Phoenix can act on it without asking follow-up questions.`;
+
+let mode = 'strategy';
+let history = [];
+let busy = false;
+
+const MODULES = [
+  {id:'module-1-morning-briefing', label:'Morning Briefing'},
+  {id:'module-2-relationship-intelligence', label:'Relationships'},
+  {id:'module-3-decision-engine', label:'Decision Engine'},
+  {id:'module-4-direction-correction', label:'Direction Correction'},
+  {id:'module-5-partner-portal', label:'Partner Portal'},
+  {id:'module-6-legacy-vault', label:'Legacy Vault'},
+  {id:'module-7-kairos-command-interface', label:'Kairos', active:true},
+];
+
+// Build modules bar
+const bar = document.getElementById('modulesBar');
+MODULES.forEach(m => {
+  const btn = document.createElement('button');
+  btn.className = 'mod-btn' + (m.active ? ' k7' : '');
+  btn.textContent = m.label;
+  btn.onclick = () => {
+    if(window.__nav) window.__nav(m.id);
+  };
+  bar.appendChild(btn);
+});
+
+// Days counter
+const d = Math.ceil((new Date('2036-06-01') - new Date()) / 86400000);
+document.getElementById('k-days').textContent = d;
+
+function setMode(m, el) {
+  mode = m;
+  document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function scrollBottom() {
+  const cw = document.getElementById('chatWrap');
+  cw.scrollTop = cw.scrollHeight;
+}
+
+function addMsg(role, text) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role === 'kairos' ? 'kairos' : 'phoenix'}`;
+  const roleLabel = role === 'kairos' ? `Kairos · ${mode} mode` : 'Phoenix';
+  div.innerHTML = `<span class="msg-role ${role === 'kairos' ? 'k' : ''}">${roleLabel}</span><div class="msg-bubble ${role === 'kairos' ? 'k' : 'p'}">${text}</div>`;
+  msgs.appendChild(div);
+  scrollBottom();
+  return div;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg kairos';
+  div.id = 'typing-indicator';
+  div.innerHTML = `<span class="msg-role k">Kairos · thinking</span><div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  msgs.appendChild(div);
+  scrollBottom();
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+async function send() {
+  const input = document.getElementById('input');
+  const text = input.value.trim();
+  if (!text || busy) return;
+
+  input.value = '';
+  autoResize(input);
+  document.getElementById('qp').style.display = 'none';
+  busy = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  addMsg('phoenix', text);
+  history.push({ role: 'user', content: text });
+
+  showTyping();
+
+  try {
+    const modeNote = mode === 'counsel' ? '\n[Counsel mode — this is personal.]' : 
+                     mode === 'coach' ? '\n[Coach mode — she needs support.]' : '';
+    
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM + modeNote,
+        messages: history
+      })
+    });
+
+    const data = await resp.json();
+    const reply = data.content?.[0]?.text || 'No response.';
+
+    removeTyping();
+    history.push({ role: 'assistant', content: reply });
+    addMsg('kairos', reply.replace(/\n\n/g, '<br><br>').replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>'));
+
+  } catch(e) {
+    removeTyping();
+    addMsg('kairos', 'Connection interrupted. Try again.');
+  }
+
+  busy = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('input').focus();
+}
+
+function sendQuick(btn) {
+  document.getElementById('input').value = btn.textContent;
+  send();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// Back button
+document.getElementById('backBtn').onclick = () => {
+  if (window.__nav) window.__nav('screen-1-command-face');
+};
+</script>
+</body>
+</html>

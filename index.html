@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0A0906">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Commander">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="/icons/phoenix-icon-192.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>I Am Commander — Command Face</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F9F8F5;--surface:#FFFFFF;--s2:#F3F1EA;--s3:#EAE7DC;--ink:#0B0A08;--dim:#4A4740;--faint:#8A8780;--gold:#9A7230;--gold-lt:#C49A42;--gold-pale:rgba(154,114,48,0.07);--gold-b:rgba(154,114,48,0.22);--teal:#0A6358;--teal-pale:rgba(10,99,88,0.07);--violet:#3D2FC0;--red:#A81A1A;--sage:#186332;--amber:#7A4A00;--border:rgba(11,10,8,0.08);--border2:rgba(11,10,8,0.15);--dark:#0B0A08;--cream:#EDE7D8;--cream-dim:#A09070;--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;font-size:14px}
+.topnav{background:var(--dark);height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid rgba(237,231,216,0.1)}
+.tn-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:var(--cream)}
+.tn-tabs{display:flex;gap:2px}
+.tn-tab{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(237,231,216,0.4);padding:5px 12px;cursor:pointer;border:none;border-bottom:1.5px solid transparent;background:none;transition:all .15s}
+.tn-tab:hover{color:var(--cream)}.tn-tab.active{color:var(--gold-lt);border-bottom-color:var(--gold-lt)}
+.tn-r{display:flex;align-items:center;gap:8px}
+.tn-time{font-family:var(--mono);font-size:10px;color:rgba(237,231,216,0.35)}
+.tn-pulse{width:6px;height:6px;border-radius:50%;background:#4ADE80;animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.greet{padding:28px 24px 20px;border-bottom:0.5px solid var(--border)}
+.greet-eye{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.greet-name{font-family:var(--serif);font-size:34px;font-weight:300;color:var(--ink);line-height:1.2}
+.greet-name em{color:var(--gold);font-style:italic}
+.greet-q{font-family:var(--serif);font-size:12px;font-style:italic;color:var(--faint);margin-top:5px}
+.hero{display:grid;grid-template-columns:190px 1fr;gap:22px;align-items:center;padding:22px 24px;border-bottom:0.5px solid var(--border)}
+.ring-wrap{position:relative;width:190px;height:190px;flex-shrink:0}
+.ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.ring-score{font-family:var(--serif);font-size:52px;font-weight:300;color:var(--ink);line-height:1;letter-spacing:-.02em}
+.ring-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-top:5px}
+.ring-trend{font-family:var(--serif);font-size:11px;font-style:italic;color:var(--gold);margin-top:3px}
+.hero-right{display:flex;flex-direction:column;gap:16px}
+.wealth-eye{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.wealth-row{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.w-cur{font-family:var(--serif);font-size:32px;font-weight:300;color:var(--gold)}
+.w-sep{font-size:14px;color:var(--faint)}.w-tgt{font-family:var(--serif);font-size:18px;font-weight:300;color:var(--dim)}
+.prog-track{height:3px;background:var(--s3);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.prog-fill{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--teal));transition:width 1.4s}
+.prog-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px}
+.prog-pct{color:var(--gold);font-weight:500}.prog-days{color:var(--teal)}
+.action-block{background:var(--surface);border:0.5px solid var(--gold-b);border-left:2px solid var(--gold);border-radius:6px;padding:14px 16px}
+.ab-eye{font-family:var(--mono);font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.ab-text{font-family:var(--serif);font-size:15px;font-weight:300;color:var(--ink);line-height:1.55;margin-bottom:10px}
+.ab-meta{display:flex;align-items:center;gap:8px}
+.ab-tag{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:2px;background:var(--gold-pale);color:var(--gold);letter-spacing:.1em}
+.ab-chk{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--faint);margin-left:auto;cursor:pointer;padding:4px 10px;border:0.5px solid var(--border2);border-radius:4px;transition:all .15s;background:none}
+.ab-chk:hover{background:var(--s2)}.ab-chk.done{color:var(--sage);border-color:var(--sage-b);background:var(--sage-pale)}
+.chk-box{width:13px;height:13px;border:1px solid var(--border2);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;flex-shrink:0}
+.ab-chk.done .chk-box{background:var(--sage);border-color:var(--sage);color:#fff}
+.section{padding:18px 24px;border-bottom:0.5px solid var(--border)}
+.sec-eye{font-family:var(--mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+.divs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.dv{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:11px 10px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;min-height:128px;display:flex;flex-direction:column;gap:5px}
+.dv:hover{border-color:var(--border2);background:var(--s2)}
+.dv-accent{position:absolute;top:0;left:0;right:0;height:1.5px}
+.dv-icon{font-size:16px;margin-top:5px}
+.dv-name{font-family:var(--mono);font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);line-height:1.3}
+.dv-kpi{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--ink);line-height:1;margin-top:auto}
+.dv-sub{font-family:var(--mono);font-size:8px;color:var(--faint);margin-top:-3px}
+.dv-bar{height:2px;background:var(--s3);border-radius:1px;overflow:hidden;margin-top:auto}
+.dv-bar-fill{height:100%;border-radius:1px}
+.dv-sig{width:6px;height:6px;border-radius:50%;position:absolute;top:9px;right:9px}
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pl{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:13px 14px}
+.pl-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.pl-eye{font-family:var(--mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--faint)}
+.pl-trend{font-family:var(--mono);font-size:10px;font-weight:500}
+.up{color:var(--sage)}.flat{color:var(--amber)}.alert{color:var(--red)}
+.pl-val{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--ink);line-height:1.15}
+.pl-val em{color:var(--gold);font-style:italic}
+.pl-bar{height:2px;background:var(--s3);margin-top:9px;border-radius:1px}
+.pl-fill{height:100%;border-radius:1px}
+.pl-note{font-size:10px;color:var(--faint);margin-top:6px;line-height:1.45;font-weight:300}
+.fc-list{display:flex;flex-direction:column;gap:5px}
+.fc{display:grid;grid-template-columns:20px 1fr auto auto;gap:10px;align-items:center;padding:9px 12px;background:var(--surface);border:0.5px solid var(--border);border-left:2px solid;border-radius:0 5px 5px 0}
+.fc-chk{width:13px;height:13px;border:1px solid var(--border2);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;cursor:pointer;transition:all .15s}
+.fc-chk.ticked{background:var(--sage);border-color:var(--sage);color:#fff}
+.fc-act{font-size:11px;color:var(--dim);line-height:1.5;font-weight:300}
+.fc-act strong{color:var(--ink);font-weight:500}
+.fc-code{font-family:var(--mono);font-size:8px;color:var(--faint);white-space:nowrap}
+.fc-imp{font-family:var(--mono);font-size:10px;font-weight:500;white-space:nowrap}
+.ex-list{display:flex;flex-direction:column;gap:5px}
+.ex{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:start;padding:9px 12px;background:var(--surface);border:0.5px solid var(--border);border-left:2px solid;border-radius:0 5px 5px 0}
+.ex-pri{font-family:var(--serif);font-size:15px;font-style:italic}
+.ex-drift{font-size:11px;color:var(--dim);font-weight:400;margin-bottom:3px}
+.ex-fix{font-size:10px;color:var(--faint);line-height:1.5;font-weight:300}
+.ex-fix strong{color:var(--sage);font-weight:500}
+.ex-time{font-family:var(--mono);font-size:9px;color:var(--faint);white-space:nowrap}
+.cad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.cad-c{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:12px 13px}
+.cad-eye{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.cad-act{font-size:11px;color:var(--dim);line-height:1.5;font-weight:300}
+.cad-act em{font-style:italic;color:var(--ink);font-family:var(--serif)}
+.cad-stat{font-family:var(--mono);font-size:9px;margin-top:5px;font-weight:500}
+.footer{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--dark);border-top:0.5px solid rgba(237,231,216,0.1)}
+.foot-brand{font-family:var(--serif);font-size:12px;letter-spacing:.1em;color:rgba(237,231,216,0.3)}
+.foot-tags{display:flex;gap:6px}
+.ft{font-family:var(--mono);font-size:9px;padding:3px 9px;border-radius:2px;letter-spacing:.06em}
+.ft-n{background:rgba(237,231,216,0.06);color:rgba(237,231,216,0.3)}
+.ft-w{background:rgba(168,26,26,0.15);color:rgba(248,113,113,0.8)}
+.ft-g{background:rgba(10,99,88,0.15);color:rgba(45,195,175,0.8)}
+</style>
+</head>
+<body>
+<div class="topnav">
+  <span class="tn-brand">I AM COMMANDER</span>
+  <div class="tn-tabs">
+    <button class="tn-tab active" onclick="location.href='index.html'">Command</button>
+    <button class="tn-tab" onclick="location.href='s2.html'">Dashboard</button>
+    <button class="tn-tab" onclick="location.href='s3.html'">Precision OS</button>
+    <button class="tn-tab" onclick="location.href='s4.html'">Operations</button>
+    <button class="tn-tab" onclick="location.href='s5.html'">People</button>
+  </div>
+  <div class="tn-r"><span class="tn-time" id="t" class="clock-el">04:00</span><span class="tn-pulse"></span></div>
+</div>
+<div class="greet">
+  <p class="greet-eye">I Am Commander · Kairos · Strategy Mode</p>
+  <p class="greet-name">Good morning, <em>Phoenix.</em></p>
+  <p class="greet-q">"It happens FOR me, not TO me." · 1 June 2026</p>
+</div>
+<div class="hero">
+  <div class="ring-wrap">
+    <canvas id="ring" width="190" height="190"></canvas>
+    <div class="ring-center">
+      <p class="ring-score" id="rs">62</p>
+      <p class="ring-label">Empire Score</p>
+      <p class="ring-trend" id="rt">↗ building</p>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div>
+      <p class="wealth-eye">Net Worth · Mission Target</p>
+      <div class="wealth-row">
+        <span class="w-cur">$0.05M</span>
+        <span class="w-sep">→</span>
+        <span class="w-tgt">$2.8B by 2036</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="wb" style="width:0%"></div></div>
+      <div class="prog-meta"><span class="prog-pct">0.00002% complete</span><span class="prog-days" id="ddays"><span class="days-left">3660</span> D remaining</span></div>
+    </div>
+    <div class="action-block">
+      <p class="ab-eye">Today's 1% · Highest Leverage</p>
+      <p class="ab-text">File PROVENANCE VERIFIED™ as certification mark at USPTO — Class 042+014, $700. This must be filed before GitHub goes public. Your legal priority date is today.</p>
+      <div class="ab-meta">
+        <span class="ab-tag">Commerce · Veritan · Critical</span>
+        <div class="ab-chk" id="ac" onclick="toggleAction()">
+          <div class="chk-box" id="cb">✓</div>
+          <span id="cl">Mark done</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="section">
+  <p class="sec-eye">Six Divisions · This week</p>
+  <div class="divs" id="divs"></div>
+</div>
+<div class="section">
+  <p class="sec-eye">Four Pillars · Empire Health</p>
+  <div class="pillars">
+    <div class="pl"><div class="pl-head"><span class="pl-eye">Commerce</span><span class="pl-trend up">↗ Phase 1</span></div><p class="pl-val">DIAMODIA <em>80%</em></p><div class="pl-bar"><div class="pl-fill" style="width:8%;background:var(--gold)"></div></div><p class="pl-note">126,525 records · SOU filed · Veritan forming</p></div>
+    <div class="pl"><div class="pl-head"><span class="pl-eye">Wealth</span><span class="pl-trend flat">↔ pending</span></div><p class="pl-val"><em>$14M</em> release</p><div class="pl-bar"><div class="pl-fill" style="width:35%;background:var(--teal)"></div></div><p class="pl-note">Cambodia $24M lead · Karona meeting</p></div>
+    <div class="pl"><div class="pl-head"><span class="pl-eye">Authority</span><span class="pl-trend up">↗ building</span></div><p class="pl-val">Book <em>·</em> PhD</p><div class="pl-bar"><div class="pl-fill" style="width:18%;background:var(--amber)"></div></div><p class="pl-note">"Unattainable" live · PhD applied 2026</p></div>
+    <div class="pl"><div class="pl-head"><span class="pl-eye">Legacy</span><span class="pl-trend up">↗ active</span></div><p class="pl-val">3 children</p><div class="pl-bar"><div class="pl-fill" style="width:42%;background:var(--sage)"></div></div><p class="pl-note">Munica Stanford ✓ · TC site live</p></div>
+  </div>
+</div>
+<div class="section">
+  <p class="sec-eye">The 1% · Strategic Actions Today</p>
+  <div class="fc-list">
+    <div class="fc" style="border-left-color:var(--red)"><div class="fc-chk ticked">✓</div><p class="fc-act"><strong>Veritan IP:</strong> File PROVENANCE VERIFIED™ certification mark · USPTO TEAS Plus · Class 042+014 · $700</p><span class="fc-code">Veritan · IP</span><span class="fc-imp" style="color:var(--red)">Critical</span></div>
+    <div class="fc" style="border-left-color:var(--gold)"><div class="fc-chk" onclick="this.classList.toggle('ticked');this.textContent=this.classList.contains('ticked')?'✓':''"></div><p class="fc-act"><strong>Veritan IP:</strong> File CHAPTER BOOK™ + DIAMODIA STANDARD™ same USPTO session · $700 + $350</p><span class="fc-code">Veritan · IP</span><span class="fc-imp" style="color:var(--sage)">+0.5%</span></div>
+    <div class="fc" style="border-left-color:var(--teal)"><div class="fc-chk" onclick="this.classList.toggle('ticked');this.textContent=this.classList.contains('ticked')?'✓':''"></div><p class="fc-act"><strong>Veritan:</strong> Form via Stripe Atlas · Delaware C-Corp · Company: Veritan, Inc. · $500 one-time</p><span class="fc-code">Commerce · Legal</span><span class="fc-imp" style="color:var(--gold)">+0.4%</span></div>
+    <div class="fc" style="border-left-color:var(--amber)"><div class="fc-chk" onclick="this.classList.toggle('ticked');this.textContent=this.classList.contains('ticked')?'✓':''"></div><p class="fc-act"><strong>Cambodia sale:</strong> Receive Karona $24M lead report · authorize $24M floor negotiation</p><span class="fc-code">Wealth · B3</span><span class="fc-imp" style="color:var(--amber)">Monitor</span></div>
+    <div class="fc" style="border-left-color:var(--violet)"><div class="fc-chk" onclick="this.classList.toggle('ticked');this.textContent=this.classList.contains('ticked')?'✓':''"></div><p class="fc-act"><strong>Supabase:</strong> Create Chapter Book database · begin 126,525 records import (May 26 target)</p><span class="fc-code">Commerce · B1</span><span class="fc-imp" style="color:var(--teal)">+0.3%</span></div>
+  </div>
+</div>
+<div class="section">
+  <p class="sec-eye">Direction Correction · Drift Detected</p>
+  <div class="ex-list">
+    <div class="ex" style="border-left-color:var(--red)"><span class="ex-pri" style="color:var(--red)">i.</span><div><p class="ex-drift">Path to Property — 8 months · 100+ offers · zero closes</p><p class="ex-fix">Sellers not accepting subject-to. <strong>Correction:</strong> switch to traditional 20% down after Cambodia sale closes. $14M net solves this immediately.</p></div><span class="ex-time">Reset now</span></div>
+    <div class="ex" style="border-left-color:var(--amber)"><span class="ex-pri" style="color:var(--amber)">ii.</span><div><p class="ex-drift">Cambodia sale — market at $22–26M, proposal at $30M</p><p class="ex-fix">Holding at $30M risks collapse. <strong>Correction:</strong> authorize $24M floor. $14M net still funds the transition.</p></div><span class="ex-time">This week</span></div>
+    <div class="ex" style="border-left-color:var(--amber)"><span class="ex-pri" style="color:var(--amber)">iii.</span><div><p class="ex-drift">Trademark sequence — PROVENANCE VERIFIED™ must precede GitHub launch</p><p class="ex-fix">A competitor can file PV™ the day GitHub goes public. <strong>Correction:</strong> file all 7 marks today, $3,150. The filing date is the legal priority date.</p></div><span class="ex-time">Today</span></div>
+  </div>
+</div>
+<div class="section" style="border-bottom:none">
+  <p class="sec-eye">Rockefeller Cadence</p>
+  <div class="cad">
+    <div class="cad-c"><p class="cad-eye">Daily · 04:00</p><p class="cad-act"><em>Morning briefing</em> · 1% actions · 21:00 review</p><p class="cad-stat" style="color:var(--sage)">● Active</p></div>
+    <div class="cad-c"><p class="cad-eye">Weekly · Friday</p><p class="cad-act"><em>Empire review</em> · 6 divisions · Phase 1 burn $4,700</p><p class="cad-stat" style="color:var(--faint)">○ Scheduled</p></div>
+    <div class="cad-c"><p class="cad-eye">Phase Gate · Feb 2027</p><p class="cad-act"><em>5 Bright Line conditions</em> · Reg CF $750K+ · Phase 2</p><p class="cad-stat" style="color:var(--faint)">○ Day 270</p></div>
+  </div>
+</div>
+<div class="footer">
+  <span class="foot-brand">I Am Commander · Veritan Inc. · DIAMODIA LLC · Kairos Intelligence</span>
+  <div class="foot-tags">
+    <span class="ft ft-n">17 systems</span>
+    <span class="ft ft-w">3 exceptions</span>
+    <span class="ft ft-g" id="ftdays">3660 D</span>
+  </div>
+</div>
+<script>
+const D=[
+  {n:'Luxury Commerce',c:'#9A7230',s:'a',kpi:'Phase 1',sub:'$4,700/mo burn',p:8,ic:'💎'},
+  {n:'Wealth Architecture',c:'#0A6358',s:'a',kpi:'$14M',sub:'Cambodia release',p:35,ic:'🏛️'},
+  {n:'Personal Authority',c:'#7A4A00',s:'g',kpi:'1 Book',sub:'PhD applied',p:18,ic:'🔥'},
+  {n:'Family Legacy',c:'#186332',s:'g',kpi:'$50K',sub:'Home fund locked',p:42,ic:'🌿'},
+  {n:'Institution',c:'#A81A1A',s:'r',kpi:'$0',sub:'CHEA · grants',p:5,ic:'🏫'},
+  {n:'Tactical Support',c:'#4A4740',s:'g',kpi:'Active',sub:'5 systems',p:60,ic:'🛡️'},
+];
+const sC={g:'#186332',a:'#7A4A00',r:'#A81A1A'};
+const g=document.getElementById('divs');
+D.forEach(d=>{
+  const el=document.createElement('div');el.className='dv';
+  el.innerHTML=`<div class="dv-accent" style="background:${d.c}"></div><div class="dv-sig" style="background:${sC[d.s]}"></div><span class="dv-icon">${d.ic}</span><p class="dv-name">${d.n}</p><p class="dv-kpi">${d.kpi}</p><p class="dv-sub">${d.sub}</p><div class="dv-bar"><div class="dv-bar-fill" style="width:${d.p}%;background:${d.c}"></div></div>`;
+  g.appendChild(el);
+});
+function drawRing(s){
+  const cv=document.getElementById('ring'),ctx=cv.getContext('2d');
+  const cx=95,cy=95,r=78,sw=8,st=-Math.PI/2,en=st+(s/100)*2*Math.PI;
+  const fc=s>=80?'#186332':s>=60?'#9A7230':'#A81A1A';
+  ctx.clearRect(0,0,190,190);
+  ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);ctx.strokeStyle='rgba(11,10,8,0.08)';ctx.lineWidth=sw;ctx.stroke();
+  const gr=ctx.createLinearGradient(cx-r,0,cx+r,0);gr.addColorStop(0,fc);gr.addColorStop(1,'#0A6358');
+  ctx.beginPath();ctx.arc(cx,cy,r,st,en);ctx.strokeStyle=gr;ctx.lineWidth=sw;ctx.lineCap='round';ctx.stroke();
+  D.forEach((d,i)=>{
+    const a=st+((i+0.5)/D.length)*2*Math.PI,dr=r+sw+9;
+    const x=cx+dr*Math.cos(a),y=cy+dr*Math.sin(a);
+    ctx.beginPath();ctx.arc(x,y,3.5,0,2*Math.PI);ctx.fillStyle=sC[d.s];ctx.fill();
+  });
+  ctx.beginPath();for(let i=0;i<6;i++){const a=(Math.PI/3)*i-Math.PI/2;i===0?ctx.moveTo(cx+13*Math.cos(a),cy+13*Math.sin(a)):ctx.lineTo(cx+13*Math.cos(a),cy+13*Math.sin(a));}
+  ctx.closePath();ctx.strokeStyle='rgba(154,114,48,0.25)';ctx.lineWidth=0.8;ctx.stroke();
+}
+drawRing(62);
+let done=false;
+function toggleAction(){
+  done=!done;document.getElementById('ac').classList.toggle('done',done);
+  document.getElementById('cl').textContent=done?'Done':'Mark done';
+  const s=done?67:62;document.getElementById('rs').textContent=s;
+  document.getElementById('rt').textContent=done?'+5 · PV™ filed':'↗ building';drawRing(s);
+}
+function calcDays(){
+  const now=new Date(),target=new Date('2036-06-01');
+  return Math.ceil((target-now)/(86400000));
+}
+const d=calcDays();
+document.getElementById('ddays').textContent='≈'+d+' D remaining';
+document.getElementById('ftdays').textContent=d+' D';
+function tick(){
+  const n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  document.getElementById('t').textContent=h+':'+m+' '+days[n.getDay()];
+}
+tick();setInterval(tick,30000);
+setTimeout(()=>document.getElementById('wb').style.width='0.00002%',400);
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/sw.js').then(function(reg){
+      console.log('Kairos SW registered:', reg.scope);
+    });
+  });
+}
+</script>
+
+<a href="kairos.html" style="position:fixed;bottom:22px;right:18px;z-index:9999;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#9A7230);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;box-shadow:0 4px 20px rgba(201,169,110,0.4);text-decoration:none">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="#0A0906"/></svg>
+  <span style="font-family:Georgia,serif;font-size:8px;font-style:italic;color:#0A0906;letter-spacing:1px;margin-top:1px">Kairos</span>
+</a>
+
+<script>
+(function(){
+  function tick(){
+    var n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');
+    var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var str=h+':'+m+' '+days[n.getDay()];
+    document.querySelectorAll('.clock-el,[id="t"],[id="clk"]').forEach(function(e){e.textContent=str;});
+  }
+  tick(); setInterval(tick, 30000);
+  var d=Math.ceil((new Date('2036-06-01')-new Date())/86400000);
+  setTimeout(function(){
+    document.querySelectorAll('.days-left').forEach(function(e){e.textContent=d+' D';});
+    // Fix days in footer tags
+    document.querySelectorAll('.ft,.f-tag').forEach(function(e){
+      if(e.textContent.match(/\d{4}\s*D/)) e.textContent=d+' D';
+    });
+  }, 100);
+})();
+if('serviceWorker'in navigator) navigator.serviceWorker.register('/iamcommander/sw.js').catch(function(){});
+</script>
+</body>
+</html>
