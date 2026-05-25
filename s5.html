@@ -161,4 +161,45 @@ tick();setInterval(tick,30000);
 })();
 if('serviceWorker'in navigator) navigator.serviceWorker.register('/iamcommander/sw.js').catch(function(){});
 </script>
+
+<script>
+// Live empire data from Notion (via data.json)
+(function(){
+  fetch('data.json?t=' + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      // Empire score
+      var sc = document.getElementById('rscore') || document.querySelector('.ring-score');
+      if(sc) sc.textContent = d.score;
+
+      // Net worth
+      document.querySelectorAll('.w-cur,.wealth-current').forEach(function(e){
+        e.textContent = d.nw;
+      });
+
+      // Progress percentage
+      var pct = ((parseFloat(d.nw) / 2800) * 100).toFixed(5) + '%';
+      document.querySelectorAll('.prog-pct,.progress-pct').forEach(function(e){
+        e.textContent = pct + ' complete';
+      });
+
+      // Today action
+      var ab = document.querySelector('.ab-text,.action-text');
+      if(ab) ab.textContent = d.action;
+      var atag = document.querySelector('.ab-tag,.action-tag');
+      if(atag) atag.textContent = d.action_div;
+
+      // Phase + burn
+      document.querySelectorAll('.phase-label,.phase-tag').forEach(function(e){
+        e.textContent = d.phase + ' · ' + d.burn;
+      });
+
+      // Redraw ring if function exists
+      if(typeof drawRing === 'function') drawRing(d.score);
+    })
+    .catch(function(){
+      // Silently use hardcoded defaults if fetch fails
+    });
+})();
+</script>
 </body></html>
