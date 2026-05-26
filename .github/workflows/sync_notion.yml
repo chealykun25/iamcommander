@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch from Notion + write data.json
+      - name: Fetch Empire database from Notion
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
@@ -24,27 +24,25 @@ jobs:
           token = os.environ.get('NOTION_TOKEN','')
           db_id = os.environ.get('NOTION_DB_ID','')
           if not token or not db_id:
-              print("Missing secrets — skipping")
-              sys.exit(0)
+              print("Missing secrets"); sys.exit(0)
 
           H = {
               "Authorization": f"Bearer {token}",
               "Notion-Version": "2022-06-28",
               "Content-Type": "application/json"
           }
-          req = urllib.request.Request(
-              f"https://api.notion.com/v1/databases/{db_id}/query",
-              data=json.dumps({"page_size":1,"sorts":[{"timestamp":"last_edited_time","direction":"descending"}]}).encode(),
-              headers=H, method="POST"
-          )
-          resp = urllib.request.urlopen(req, timeout=15)
-          data = json.loads(resp.read())
 
-          if not data.get('results'):
-              print("No rows found")
-              sys.exit(0)
-
-          props = data['results'][0]['properties']
+          def query(filter_type, page_size=50):
+              body = {
+                  "page_size": page_size,
+                  "filter": {"property":"Type","select":{"equals":filter_type}},
+                  "sorts": [{"timestamp":"last_edited_time","direction":"descending"}]
+              }
+              req = urllib.request.Request(
+                  f"https://api.notion.com/v1/databases/{db_id}/query",
+                  data=json.dumps(body).encode(), headers=H, method="POST"
+              )
+              return json.loads(urllib.request.urlopen(req, timeout=15).read()).get('results',[])
 
           def txt(p):
               if not p: return ''
@@ -54,21 +52,65 @@ jobs:
               if p.get('number') is not None: return str(p['number'])
               return ''
 
-          empire = {
-              "score":      int(float(txt(props.get('Empire Score')) or 62)),
-              "nw":         txt(props.get('Net Worth'))      or "$0.05M",
-              "action":     txt(props.get('Today Action'))   or "File PROVENANCE VERIFIED\u2122 at USPTO",
-              "action_div": txt(props.get('Action Division'))or "Commerce \u00b7 Veritan",
-              "exception1": txt(props.get('Exception 1'))    or "",
-              "exception2": txt(props.get('Exception 2'))    or "",
-              "phase":      txt(props.get('Phase'))          or "Phase 1",
-              "burn":       txt(props.get('Burn Rate'))      or "$4,700/mo",
-              "updated":    data['results'][0].get('last_edited_time','')
+          # ── Daily row ────────────────────────────────────────────────
+          daily = query('Daily', 1)
+          dash = {}
+          if daily:
+              p = daily[0]['properties']
+              dash = {
+                  "score":      int(float(txt(p.get('Score')) or 62)),
+                  "nw":         txt(p.get('Net Worth'))    or "$0.05M",
+                  "action":     txt(p.get('Next Action'))  or "",
+                  "action_div": "Commerce · Veritan",
+                  "phase":      "Phase 1",
+                  "burn":       "$4,700/mo",
+              }
+
+          # ── Projects ─────────────────────────────────────────────────
+          projects = []
+          exceptions = []
+          for row in query('Project', 50):
+              p = row['properties']
+              signal = txt(p.get('Signal')) or 'Green'
+              proj = {
+                  "name":    txt(p.get('Name')),
+                  "div":     txt(p.get('Division')),
+                  "signal":  signal,
+                  "kpi":     txt(p.get('KPI')),
+                  "action":  txt(p.get('Next Action')),
+                  "owner":   txt(p.get('Owner')),
+                  "status":  txt(p.get('Status')),
+              }
+              projects.append(proj)
+              if signal == 'Red':
+                  exceptions.append(txt(p.get('Name')) + ' — ' + txt(p.get('Next Action')))
+
+          # ── People ───────────────────────────────────────────────────
+          people = []
+          for row in query('Person', 20):
+              p = row['properties']
+              people.append({
+                  "name":        txt(p.get('Name')),
+                  "kpi":         txt(p.get('KPI')),
+                  "next_action": txt(p.get('Next Action')),
+                  "signal":      txt(p.get('Signal')),
+              })
+
+          # ── Build data.json ──────────────────────────────────────────
+          data = {
+              **dash,
+              "exception1":  exceptions[0] if len(exceptions) > 0 else "",
+              "exception2":  exceptions[1] if len(exceptions) > 1 else "",
+              "projects":    projects,
+              "people":      people,
+              "updated":     daily[0].get('last_edited_time','') if daily else ""
           }
 
           with open('data.json','w') as f:
-              json.dump(empire, f, indent=2)
-          print("Updated:", empire)
+              json.dump(data, f, indent=2)
+
+          print(f"Synced: {len(projects)} projects, {len(people)} people")
+          print(f"Exceptions: {exceptions}")
           EOF
 
       - name: Commit if changed
