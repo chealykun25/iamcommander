@@ -148,7 +148,7 @@ textarea::placeholder{color:rgba(138,122,96,0.55)}
 <script>
 var WORKER = 'https://kairos-proxy.chealykun25.workers.dev';
 var MODEL  = 'claude-sonnet-4-6';
-var SYS = 'You are Kairos, senior strategic advisor to Phoenix. Direct, surgical, no filler. Empire: DIAMODIA luxury Cambodian gemstone brand, $0.05M now, $2.8B target by 2036. Phase 1: Phoenix+Claude only, $4,700/mo. Critical: File PROVENANCE VERIFIED trademark at USPTO. Three children: Munica 14, TC 10, Vongsa 4. Father 73. 4am wake, 5 miles daily, Phoenix AZ, from Cambodia. Every answer: Function, Flexibility, Alignment, Cost efficiency. One or two options max. Start with the answer.';
+var SYS = 'You are Kairos, senior strategic advisor to Phoenix. Direct, surgical, no filler. Keep every response under 120 words. Lead with the answer. Cut everything else. Empire: DIAMODIA luxury Cambodian gemstone brand, $0.05M now, $2.8B target by 2036. Phase 1: Phoenix+Claude only, $4,700/mo. Critical: File PROVENANCE VERIFIED trademark at USPTO. Three children: Munica 14, TC 10, Vongsa 4. Father 73. 4am wake, 5 miles daily, Phoenix AZ, from Cambodia. Every answer: Function, Flexibility, Alignment, Cost efficiency. One or two options max. Start with the answer.';
 
 var mode = 'strategy';
 var busy = false;
@@ -217,7 +217,7 @@ async function go() {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 800,
+        max_tokens: 350,
         system: SYS + modeCtx,
         messages: hist
       })
@@ -229,6 +229,7 @@ async function go() {
       : 'Error ' + res.status + ': ' + JSON.stringify(data).slice(0, 150);
     hist.push({role:'assistant', content:reply});
     addMsg('k', reply);
+    speakOut(reply);
   } catch(err) {
     removeTyping();
     addMsg('k', 'Connection error: ' + err.message);
@@ -239,26 +240,73 @@ async function go() {
   document.getElementById('inp').focus();
 }
 
-// Voice
+// Voice conversation
 var rec = null;
 var listening = false;
+var speaking = false;
+var synth = window.speechSynthesis;
+var kVoice = null;
+
+function loadVoice() {
+  var voices = synth.getVoices();
+  var prefs = ['Daniel','Alex','Google UK English Male','Microsoft David'];
+  for (var p of prefs) {
+    var v = voices.find(function(v){ return v.name.includes(p); });
+    if (v) { kVoice = v; return; }
+  }
+  kVoice = voices.find(function(v){ return v.lang && v.lang.startsWith('en'); }) || voices[0];
+}
+if (synth) { synth.onvoiceschanged = loadVoice; setTimeout(loadVoice, 300); }
+
+function speakOut(text) {
+  if (!synth) return;
+  synth.cancel();
+  var clean = text.replace(/\*\*/g,'').replace(/\*/g,'').replace(/<[^>]*>/g,'').trim();
+  var utt = new SpeechSynthesisUtterance(clean);
+  utt.rate = 0.88; utt.pitch = 0.82; utt.volume = 1;
+  if (kVoice) utt.voice = kVoice;
+  speaking = true;
+  utt.onend = function() { speaking = false; };
+  utt.onerror = function() { speaking = false; };
+  synth.speak(utt);
+}
+
 function toggleMic() {
+  // If Kairos is speaking, stop him
+  if (speaking) { synth && synth.cancel(); speaking = false; }
+  // If already listening, stop
   if (listening) { rec && rec.stop(); return; }
+  
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { addMsg('k', 'Voice not supported on this browser. Type your question.'); return; }
+  if (!SR) { addMsg('k', 'Voice input not supported. Try Chrome or Safari.'); return; }
+  
   rec = new SR();
-  rec.lang = 'en-US'; rec.continuous = false; rec.interimResults = false;
+  rec.lang = 'en-US'; rec.continuous = false; rec.interimResults = true;
+  
   rec.onstart = function() {
     listening = true;
     document.getElementById('micbtn').classList.add('listening');
+    document.getElementById('inp').placeholder = 'Listening...';
   };
   rec.onresult = function(e) {
-    var t = e.results[0][0].transcript;
-    document.getElementById('inp').value = t;
-    go();
+    var interim = '', final = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    document.getElementById('inp').value = final || interim;
+    if (final) { rec.stop(); go(); }
   };
-  rec.onerror = function() { listening = false; document.getElementById('micbtn').classList.remove('listening'); };
-  rec.onend = function() { listening = false; document.getElementById('micbtn').classList.remove('listening'); };
+  rec.onerror = function() {
+    listening = false;
+    document.getElementById('micbtn').classList.remove('listening');
+    document.getElementById('inp').placeholder = 'Ask Kairos…';
+  };
+  rec.onend = function() {
+    listening = false;
+    document.getElementById('micbtn').classList.remove('listening');
+    document.getElementById('inp').placeholder = 'Ask Kairos…';
+  };
   rec.start();
 }
 </script>
