@@ -281,7 +281,7 @@ async function sendText() {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1000,
         system: SYSTEM + modeNote,
         messages: history
@@ -418,7 +418,7 @@ async function sendVoice(text) {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-sonnet-4-6',
         max_tokens: 600,
         system: SYSTEM + modeNote,
         messages: vhistory
@@ -476,7 +476,7 @@ async function testWorker() {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-sonnet-4-6',
         max_tokens: 20,
         messages: [{role:'user', content:'Say: online'}]
       })
