@@ -277,7 +277,7 @@ async function sendText() {
 
   try {
     var modeNote = mode==='counsel' ? '\n[Counsel mode.]' : mode==='coach' ? '\n[Coach mode.]' : '';
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
+    var res = await fetch('https://kairos-proxy.chealykun25.workers.dev', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
@@ -414,7 +414,7 @@ async function sendVoice(text) {
 
   try {
     var modeNote = mode==='counsel' ? '\n[Counsel mode.]' : mode==='coach' ? '\n[Coach mode.]' : '';
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
+    var res = await fetch('https://kairos-proxy.chealykun25.workers.dev', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
