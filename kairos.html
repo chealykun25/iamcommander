@@ -281,14 +281,14 @@ async function sendText() {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1000,
         system: SYSTEM + modeNote,
         messages: history
       })
     });
     var data = await res.json();
-    var reply = data.content && data.content[0] ? data.content[0].text : 'Connection error. Try again.';
+    var reply = data.content && data.content[0] ? data.content[0].text : 'ERROR: ' + JSON.stringify(data).slice(0,200);
     removeTyping();
     history.push({role:'assistant', content:reply});
     addMsg('k', reply);
@@ -418,7 +418,7 @@ async function sendVoice(text) {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 600,
         system: SYSTEM + modeNote,
         messages: vhistory
@@ -476,7 +476,7 @@ async function testWorker() {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 20,
         messages: [{role:'user', content:'Say: online'}]
       })
