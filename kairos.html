@@ -467,6 +467,29 @@ function afterSpeak() {
   setTimeout(startListen, 600);
 }
 
+
+async function testWorker() {
+  var out = document.getElementById('debug-result');
+  out.textContent = 'Testing...';
+  try {
+    var res = await fetch('https://kairos-proxy.chealykun25.workers.dev', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 20,
+        messages: [{role:'user', content:'Say: online'}]
+      })
+    });
+    var text = await res.text();
+    out.style.color = res.ok ? '#4ADE80' : '#F87171';
+    out.textContent = 'Status ' + res.status + ': ' + text.slice(0,300);
+  } catch(e) {
+    out.style.color = '#F87171';
+    out.textContent = 'Error: ' + e.message;
+  }
+}
+
 // SW
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/iamcommander/sw.js').catch(function(){});
