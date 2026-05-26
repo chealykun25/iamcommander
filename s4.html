@@ -229,4 +229,42 @@ if('serviceWorker'in navigator) navigator.serviceWorker.register('/iamcommander/
     });
 })();
 </script>
+
+<script>
+// Live project signals from Notion via data.json
+fetch('data.json?t='+Date.now())
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(!d.projects) return;
+    var sigColor = {Green:'#4ADE80', Amber:'#FBBF24', Red:'#F87171'};
+    d.projects.forEach(function(p){
+      // Find matching div card by project name fragment
+      document.querySelectorAll('.dv-name').forEach(function(el){
+        var card = el.closest('.dv');
+        if(!card) return;
+        var text = el.textContent.toLowerCase();
+        var pname = p.name.toLowerCase();
+        // Match by B number
+        var bnum = pname.match(/b(\d+)/);
+        if(bnum && text.includes('b'+bnum[1]) || text.includes(p.div.toLowerCase())){
+          // Update signal dot
+          var sig = card.querySelector('.dv-sig');
+          if(sig) sig.style.background = sigColor[p.signal] || '#4ADE80';
+          // Update sub text
+          var sub = card.querySelector('.dv-sub');
+          if(sub) sub.textContent = p.kpi;
+        }
+      });
+    });
+    // Update exceptions in direction correction
+    if(d.exception1){
+      var ex1 = document.querySelector('.ex:first-child .ex-drift');
+      if(ex1) ex1.textContent = d.exception1;
+    }
+    if(d.exception2){
+      var ex2 = document.querySelector('.ex:nth-child(2) .ex-drift');
+      if(ex2) ex2.textContent = d.exception2;
+    }
+  }).catch(function(){});
+</script>
 </body></html>

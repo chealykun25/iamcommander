@@ -202,4 +202,32 @@ if('serviceWorker'in navigator) navigator.serviceWorker.register('/iamcommander/
     });
 })();
 </script>
+
+<script>
+// Live people data from Notion via data.json
+fetch('data.json?t='+Date.now())
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(!d.people) return;
+    var sigColor = {Green:'#4ADE80', Amber:'#FBBF24', Red:'#F87171'};
+    d.people.forEach(function(p){
+      document.querySelectorAll('.pc-name').forEach(function(el){
+        var card = el.closest('.pc');
+        if(!card) return;
+        if(el.textContent.toLowerCase().includes(p.name.toLowerCase().split(' ')[0].toLowerCase())){
+          var kpi = card.querySelector('.pc-role');
+          if(kpi) kpi.textContent = p.kpi;
+          var action = card.querySelector('.pc-action');
+          if(action) action.textContent = p.next_action;
+          var bar = card.querySelector('.trust-fill');
+          if(bar){
+            var score = parseInt((p.kpi.match(/\d+/) || ['80'])[0]);
+            bar.style.width = Math.min(score,100)+'%';
+            bar.style.background = sigColor[p.signal] || '#4ADE80';
+          }
+        }
+      });
+    });
+  }).catch(function(){});
+</script>
 </body></html>
