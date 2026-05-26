@@ -314,6 +314,63 @@ textarea::placeholder{color:rgba(138,122,96,0.6)}
 .send:active{transform:scale(.93)}
 .send:disabled{background:rgba(201,169,110,0.25);cursor:not-allowed}
 .send svg{width:18px;height:18px}
+
+/* ── MIC BUTTON ── */
+.mic{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:var(--ink3);
+  border:1px solid rgba(201,169,110,0.3);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  transition:all .15s;
+}
+.mic:active,.mic.listening{
+  background:rgba(201,169,110,0.2);
+  border-color:var(--gold);
+  transform:scale(1.05);
+}
+.mic.listening{
+  animation:micpulse 1s infinite;
+}
+@keyframes micpulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(201,169,110,0.4)}
+  50%{box-shadow:0 0 0 10px rgba(201,169,110,0)}
+}
+.mic svg{width:20px;height:20px}
+
+/* Voice toggle */
+.voice-toggle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 14px;
+  background:none;
+  border:1px solid rgba(201,169,110,0.2);
+  border-radius:20px;
+  cursor:pointer;
+  color:var(--stone);
+  font-size:13px;
+  font-family:var(--sans);
+  transition:all .15s;
+}
+.voice-toggle.on{
+  border-color:var(--gold);
+  color:var(--gold);
+  background:rgba(201,169,110,0.08);
+}
+.voice-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 18px 2px;
+  background:var(--ink2);
+  border-bottom:none;
+}
 </style>
 </head>
 <body>
@@ -379,6 +436,20 @@ textarea::placeholder{color:rgba(138,122,96,0.6)}
 
   </div><!-- /chat -->
 
+
+  <!-- VOICE BAR -->
+  <div class="voice-bar">
+    <button class="voice-toggle" id="voiceToggle" onclick="toggleVoice()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M12 18.5C15.5 18.5 18.5 15.5 18.5 12V7C18.5 3.5 15.5 0.5 12 0.5C8.5 0.5 5.5 3.5 5.5 7V12C5.5 15.5 8.5 18.5 12 18.5Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M3 12C3 16.97 7.03 21 12 21C16.97 21 21 16.97 21 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Voice off
+    </button>
+    <span style="font-size:11px;color:var(--stone)" id="voiceStatus"></span>
+  </div>
+
   <!-- INPUT BAR -->
   <div class="inputbar">
     <div class="inputwrap">
@@ -386,6 +457,13 @@ textarea::placeholder{color:rgba(138,122,96,0.6)}
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"
         oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
     </div>
+    <button class="mic" id="micbtn" onclick="toggleMic()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 18.5C15.5 18.5 18.5 15.5 18.5 12V7C18.5 3.5 15.5 0.5 12 0.5C8.5 0.5 5.5 3.5 5.5 7V12C5.5 15.5 8.5 18.5 12 18.5Z" stroke="var(--gold)"/>
+        <path d="M3 12C3 16.97 7.03 21 12 21C16.97 21 21 16.97 21 12" stroke="var(--gold)" stroke-linecap="round"/>
+        <line x1="12" y1="21" x2="12" y2="23" stroke="var(--gold)" stroke-linecap="round"/>
+      </svg>
+    </button>
     <button class="send" id="sendbtn" onclick="send()">
       <svg viewBox="0 0 24 24" fill="none">
         <path d="M22 2L11 13" stroke="#0A0906" stroke-width="2.5" stroke-linecap="round"/>
@@ -475,11 +553,13 @@ async function send() {
     removeTyping();
     history.push({role:'assistant', content:reply});
     addMsg('k', reply);
+    speak(reply);
   } catch(e) {
     removeTyping();
     addMsg('k', 'Connection interrupted. Try again.');
   }
 
+  if (role !== 'me') window._kSpeak(reply);
   busy = false;
   document.getElementById('sendbtn').disabled = false;
   document.getElementById('inp').focus();
@@ -489,6 +569,102 @@ function usePrompt(btn) {
   document.getElementById('inp').value = btn.textContent;
   send();
 }
+
+
+// ── VOICE ──────────────────────────────────────────────────────────────
+var voiceOn = false;
+var listening = false;
+var recognition = null;
+var synth = window.speechSynthesis;
+var kairosVoice = null;
+
+// Find best voice for Kairos (deep, male, English)
+function loadVoice() {
+  var voices = synth.getVoices();
+  var preferred = ['Daniel','Alex','Google UK English Male','Microsoft David','en-GB','en-US'];
+  for (var p of preferred) {
+    var v = voices.find(function(v){ return v.name.includes(p) || v.lang === p; });
+    if (v) { kairosVoice = v; break; }
+  }
+  if (!kairosVoice && voices.length) kairosVoice = voices[0];
+}
+synth.onvoiceschanged = loadVoice;
+loadVoice();
+
+function toggleVoice() {
+  voiceOn = !voiceOn;
+  var btn = document.getElementById('voiceToggle');
+  btn.classList.toggle('on', voiceOn);
+  btn.querySelector('svg').nextSibling ? null : null;
+  btn.childNodes[btn.childNodes.length-1].textContent = voiceOn ? 'Voice on' : 'Voice off';
+  if (!voiceOn) synth.cancel();
+  document.getElementById('voiceStatus').textContent = voiceOn ? 'Kairos will speak his responses' : '';
+}
+
+function speak(text) {
+  if (!voiceOn) return;
+  synth.cancel();
+  var clean = text.replace(/<[^>]*>/g,'').replace(/\*+/g,'').trim();
+  var utt = new SpeechSynthesisUtterance(clean);
+  utt.rate = 0.88;
+  utt.pitch = 0.85;
+  utt.volume = 1;
+  if (kairosVoice) utt.voice = kairosVoice;
+  synth.speak(utt);
+}
+
+// Setup speech recognition
+function setupRecognition() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('voiceStatus').textContent = 'Voice input not supported on this browser';
+    return null;
+  }
+  var r = new SR();
+  r.continuous = false;
+  r.interimResults = true;
+  r.lang = 'en-US';
+
+  r.onstart = function() {
+    listening = true;
+    document.getElementById('micbtn').classList.add('listening');
+    document.getElementById('voiceStatus').textContent = 'Listening…';
+  };
+  r.onresult = function(e) {
+    var transcript = Array.from(e.results).map(function(r){ return r[0].transcript; }).join('');
+    document.getElementById('inp').value = transcript;
+    if (e.results[e.results.length-1].isFinal) {
+      document.getElementById('voiceStatus').textContent = '';
+      send();
+    }
+  };
+  r.onerror = function(e) {
+    document.getElementById('voiceStatus').textContent = 'Try again';
+    stopListening();
+  };
+  r.onend = function() { stopListening(); };
+  return r;
+}
+
+function stopListening() {
+  listening = false;
+  document.getElementById('micbtn').classList.remove('listening');
+  if (document.getElementById('voiceStatus').textContent === 'Listening…')
+    document.getElementById('voiceStatus').textContent = '';
+}
+
+function toggleMic() {
+  if (listening) {
+    if (recognition) recognition.stop();
+    return;
+  }
+  recognition = setupRecognition();
+  if (recognition) recognition.start();
+}
+
+// Override addMsg to also speak Kairos responses
+var _origAddMsg = addMsg;
+window._kSpeak = function(text) { speak(text); };
 
 // Service worker
 if ('serviceWorker' in navigator) {
