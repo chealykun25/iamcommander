@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kairos Connection Test</title>
+<style>
+body{background:#0A0906;color:#F5F0E8;font-family:system-ui;padding:30px 20px;font-size:17px}
+button{width:100%;padding:16px;background:#C9A96E;color:#0A0906;border:none;border-radius:10px;font-size:17px;font-weight:600;cursor:pointer;margin-bottom:20px}
+#result{white-space:pre-wrap;word-break:break-word;line-height:1.7;padding:14px;border-radius:8px;background:#141210;min-height:60px;font-size:15px}
+</style>
+</head>
+<body>
+<h2 style="color:#C9A96E;margin-bottom:6px">Kairos Test</h2>
+<p style="color:#8A7A60;margin-bottom:24px">Tap button — see raw response</p>
+<button onclick="run()">TEST CONNECTION NOW</button>
+<div id="result">Waiting...</div>
+<script>
+async function run() {
+  var out = document.getElementById('result');
+  out.style.color = '#F5F0E8';
+  out.textContent = 'Calling Worker...';
+  
+  var WORKER = 'https://kairos-proxy.chealykun25.workers.dev';
+  
+  try {
+    var r = await fetch(WORKER, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 50,
+        messages: [{role: 'user', content: 'Say exactly: Kairos is online and ready.'}]
+      })
+    });
+    
+    var status = r.status;
+    var body = await r.text();
+    
+    out.textContent = 'HTTP Status: ' + status + '\n\nBody:\n' + body.slice(0, 500);
+    
+    try {
+      var j = JSON.parse(body);
+      if (j.content && j.content[0]) {
+        out.style.color = '#4ADE80';
+        out.textContent = 'SUCCESS ✓\n\nKairos says:\n' + j.content[0].text;
+      } else if (j.error) {
+        out.style.color = '#F87171';
+        out.textContent = 'API Error:\n' + JSON.stringify(j.error, null, 2);
+      }
+    } catch(e) {
+      out.style.color = '#FBBF24';
+      out.textContent = 'HTTP ' + status + ' (not JSON):\n' + body.slice(0, 300);
+    }
+    
+  } catch(e) {
+    out.style.color = '#F87171';
+    out.textContent = 'NETWORK ERROR:\n' + e.message + '\n\nThis means the browser blocked the request (CORS or no internet)';
+  }
+}
+</script>
+</body>
+</html>
