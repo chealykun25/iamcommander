@@ -1,0 +1,79 @@
+name: Sync Empire Data from Notion
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch from Notion + write data.json
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+        run: |
+          python3 << 'EOF'
+          import urllib.request, json, os, sys
+
+          token = os.environ.get('NOTION_TOKEN','')
+          db_id = os.environ.get('NOTION_DB_ID','')
+          if not token or not db_id:
+              print("Missing secrets — skipping")
+              sys.exit(0)
+
+          H = {
+              "Authorization": f"Bearer {token}",
+              "Notion-Version": "2022-06-28",
+              "Content-Type": "application/json"
+          }
+          req = urllib.request.Request(
+              f"https://api.notion.com/v1/databases/{db_id}/query",
+              data=json.dumps({"page_size":1,"sorts":[{"timestamp":"last_edited_time","direction":"descending"}]}).encode(),
+              headers=H, method="POST"
+          )
+          resp = urllib.request.urlopen(req, timeout=15)
+          data = json.loads(resp.read())
+
+          if not data.get('results'):
+              print("No rows found")
+              sys.exit(0)
+
+          props = data['results'][0]['properties']
+
+          def txt(p):
+              if not p: return ''
+              for k in ['rich_text','title']:
+                  if p.get(k) and p[k]: return p[k][0].get('plain_text','')
+              if p.get('select') and p['select']: return p['select']['name']
+              if p.get('number') is not None: return str(p['number'])
+              return ''
+
+          empire = {
+              "score":      int(float(txt(props.get('Empire Score')) or 62)),
+              "nw":         txt(props.get('Net Worth'))      or "$0.05M",
+              "action":     txt(props.get('Today Action'))   or "File PROVENANCE VERIFIED\u2122 at USPTO",
+              "action_div": txt(props.get('Action Division'))or "Commerce \u00b7 Veritan",
+              "exception1": txt(props.get('Exception 1'))    or "",
+              "exception2": txt(props.get('Exception 2'))    or "",
+              "phase":      txt(props.get('Phase'))          or "Phase 1",
+              "burn":       txt(props.get('Burn Rate'))      or "$4,700/mo",
+              "updated":    data['results'][0].get('last_edited_time','')
+          }
+
+          with open('data.json','w') as f:
+              json.dump(empire, f, indent=2)
+          print("Updated:", empire)
+          EOF
+
+      - name: Commit if changed
+        run: |
+          git config user.email "kairos@diamodia.com"
+          git config user.name "Kairos"
+          git add data.json
+          git diff --staged --quiet || (git commit -m "Auto-sync: Notion → data.json" && git push)
