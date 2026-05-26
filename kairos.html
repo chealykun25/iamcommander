@@ -6,11 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0A0906">
-<link rel="manifest" href="/iamcommander/manifest.json">
-<title>Kairos · I Am Commander</title>
+<title>Kairos</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
   --ink:#0A0906;--ink2:#141210;--ink3:#1E1B17;
   --gold:#C9A96E;--ivory:#F5F0E8;--stone:#8A7A60;
@@ -18,481 +17,249 @@
   --serif:'Cormorant Garamond',Georgia,serif;
   --sans:'DM Sans',system-ui,sans-serif;
 }
-html,body{height:100%;background:var(--ink);color:var(--ivory);font-family:var(--sans);font-size:17px;-webkit-font-smoothing:antialiased;overflow:hidden}
+html,body{height:100%;background:var(--ink);color:var(--ivory);font-family:var(--sans);font-size:17px;overflow:hidden;-webkit-font-smoothing:antialiased}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 
-/* TOPBAR */
 .topbar{flex-shrink:0;height:52px;background:var(--ink2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:10px}
-.back{font-size:15px;color:var(--stone);background:none;border:1px solid rgba(201,169,110,0.2);border-radius:8px;padding:7px 14px;cursor:pointer;flex-shrink:0;font-family:var(--sans)}
-.back:active{background:rgba(201,169,110,0.1)}
+.back{font-size:15px;color:var(--stone);background:none;border:1px solid rgba(201,169,110,0.2);border-radius:8px;padding:7px 14px;cursor:pointer;font-family:var(--sans)}
 .brand{font-family:var(--serif);font-size:18px;font-weight:300;color:var(--ivory);flex:1;text-align:center}
 .brand em{color:var(--gold);font-style:italic}
-.modes{display:flex;gap:5px;flex-shrink:0}
-.mode{font-size:12px;padding:5px 11px;border-radius:20px;border:1px solid rgba(201,169,110,0.2);background:none;color:var(--stone);cursor:pointer;font-family:var(--sans)}
+.modes{display:flex;gap:5px}
+.mode{font-size:12px;padding:5px 10px;border-radius:20px;border:1px solid rgba(201,169,110,0.2);background:none;color:var(--stone);cursor:pointer;font-family:var(--sans)}
 .mode.on{background:rgba(201,169,110,0.15);color:var(--gold);border-color:var(--gold)}
 
-/* MODULE NAV */
 .modnav{flex-shrink:0;display:flex;gap:6px;padding:9px 16px;background:var(--ink2);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch}
 .modnav::-webkit-scrollbar{display:none}
-.modlink{font-size:13px;color:var(--stone);padding:6px 14px;border:1px solid rgba(201,169,110,0.15);border-radius:20px;text-decoration:none;white-space:nowrap;flex-shrink:0}
-.modlink:active{color:var(--gold);border-color:var(--gold)}
+.ml{font-size:13px;color:var(--stone);padding:6px 14px;border:1px solid rgba(201,169,110,0.15);border-radius:20px;text-decoration:none;white-space:nowrap}
 
-/* CHAT */
-.chat{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px;display:flex;flex-direction:column;gap:20px}
+.chat{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px 10px;display:flex;flex-direction:column;gap:18px}
 .chat::-webkit-scrollbar{width:3px}
 .chat::-webkit-scrollbar-thumb{background:rgba(201,169,110,0.15)}
 
-/* HEADER */
-.khead{text-align:center;padding:8px 0 24px;border-bottom:1px solid var(--border);margin-bottom:4px}
-.kmark{width:52px;height:52px;margin:0 auto 14px;display:block}
-.kname{font-family:var(--serif);font-size:36px;font-weight:300;color:var(--ivory);margin-bottom:6px}
+.khead{text-align:center;padding:8px 0 20px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.kname{font-family:var(--serif);font-size:34px;font-weight:300;color:var(--ivory);margin:12px 0 5px}
 .kname em{color:var(--gold);font-style:italic}
 .ksub{font-size:13px;color:var(--stone)}
-.laws{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:12px}
-.law{font-size:11px;color:rgba(201,169,110,0.5);padding:3px 10px;border:1px solid rgba(201,169,110,0.15);border-radius:20px}
+.laws{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.law{font-size:11px;color:rgba(201,169,110,0.5);padding:3px 9px;border:1px solid rgba(201,169,110,0.15);border-radius:20px}
 
-/* MESSAGES */
-.msg{display:flex;flex-direction:column;gap:6px}
+.msg{display:flex;flex-direction:column;gap:5px}
 .msg.me{align-items:flex-end}
-.lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(201,169,110,0.45);padding:0 4px}
-.msg.me .lbl{color:rgba(245,240,232,0.3)}
-.bubble{padding:16px 18px;border-radius:14px;line-height:1.75}
-.bubble.k{background:var(--ink2);border:1px solid var(--border);border-left:3px solid var(--gold);font-family:var(--serif);font-size:20px;font-weight:300;color:var(--ivory)}
-.bubble.me{background:rgba(201,169,110,0.1);border:1px solid rgba(201,169,110,0.2);font-size:16px;max-width:85%}
-.typing{display:flex;align-items:center;gap:5px;padding:16px 18px;background:var(--ink2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:14px;width:fit-content}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 1.2s infinite}
+.lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(201,169,110,0.4);padding:0 3px}
+.msg.me .lbl{color:rgba(245,240,232,0.25)}
+.bubble{padding:15px 17px;border-radius:14px;line-height:1.75}
+.bubble.k{background:var(--ink2);border:1px solid var(--border);border-left:3px solid var(--gold);font-family:var(--serif);font-size:20px;font-weight:300}
+.bubble.me{background:rgba(201,169,110,0.1);border:1px solid rgba(201,169,110,0.18);font-size:16px;max-width:85%}
+.typing{display:flex;gap:5px;padding:15px 17px;background:var(--ink2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:14px;width:fit-content;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:p 1.2s infinite}
 .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
-@keyframes pulse{0%,60%,100%{opacity:.2;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+@keyframes p{0%,60%,100%{opacity:.2;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
 
-/* QUICK PROMPTS */
-.qps{display:flex;flex-wrap:wrap;gap:8px;padding-top:4px}
-.qp{font-size:14px;color:var(--stone);padding:8px 16px;border:1px solid rgba(201,169,110,0.15);border-radius:20px;background:none;cursor:pointer;text-align:left;line-height:1.4;font-family:var(--sans)}
-.qp:active{background:rgba(201,169,110,0.1);color:var(--gold)}
+.qps{display:flex;flex-wrap:wrap;gap:7px}
+.qp{font-size:14px;color:var(--stone);padding:8px 15px;border:1px solid rgba(201,169,110,0.15);border-radius:20px;background:none;cursor:pointer;text-align:left;font-family:var(--sans)}
 
-/* INPUT */
-.inputbar{flex-shrink:0;padding:10px 16px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:var(--ink2);border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end}
-.inputwrap{flex:1;background:var(--ink3);border:1px solid rgba(201,169,110,0.2);border-radius:14px;padding:11px 14px;display:flex;align-items:flex-end}
-.inputwrap:focus-within{border-color:rgba(201,169,110,0.5)}
+.bar{flex-shrink:0;padding:10px 14px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:var(--ink2);border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end}
+.wrap{flex:1;background:var(--ink3);border:1px solid rgba(201,169,110,0.2);border-radius:14px;padding:11px 13px;display:flex;align-items:flex-end}
+.wrap:focus-within{border-color:rgba(201,169,110,0.5)}
 textarea{flex:1;background:none;border:none;outline:none;color:var(--ivory);font-family:var(--sans);font-size:17px;font-weight:300;resize:none;line-height:1.5;min-height:26px;max-height:120px}
-textarea::placeholder{color:rgba(138,122,96,0.6)}
-.sendbtn{width:46px;height:46px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sendbtn:active{transform:scale(.93)}
-.sendbtn:disabled{background:rgba(201,169,110,0.25);cursor:not-allowed}
-.micbtn{width:46px;height:46px;border-radius:50%;background:var(--ink3);border:1px solid rgba(201,169,110,0.3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.micbtn:active,.micbtn.on{background:rgba(201,169,110,0.15);border-color:var(--gold)}
-.micbtn.listening{animation:mpulse 1s infinite}
-@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(201,169,110,0.4)}50%{box-shadow:0 0 0 8px rgba(201,169,110,0)}}
+textarea::placeholder{color:rgba(138,122,96,0.55)}
+.send{width:46px;height:46px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.send:active{transform:scale(.93)}
+.send:disabled{background:rgba(201,169,110,0.25);cursor:not-allowed}
 
-/* VOICE MODAL */
-.vmodal{display:none;position:fixed;inset:0;background:#0A0906;z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:20px}
-.vmodal.open{display:flex}
-.vstatus{font-size:16px;color:var(--stone);text-align:center;min-height:24px;letter-spacing:.03em}
-.vcard{width:100%;max-width:380px;background:var(--ink2);border:1px solid var(--border);border-radius:16px;padding:18px 20px;min-height:70px;text-align:center}
-.vtxt{font-size:17px;color:var(--ivory);line-height:1.6;min-height:26px}
-.vorb{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#9A7230);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 40px rgba(201,169,110,0.35);flex-shrink:0;transition:all .2s}
-.vorb.listening{animation:opulse 1.2s infinite}
-.vorb.thinking{background:linear-gradient(135deg,#3A3530,#2A2520)}
-.vorb.speaking{background:linear-gradient(135deg,#3A6A3A,#2A5A2A)}
-@keyframes opulse{0%,100%{box-shadow:0 8px 40px rgba(201,169,110,0.35)}50%{box-shadow:0 8px 60px rgba(201,169,110,0.7),0 0 0 20px rgba(201,169,110,0.08)}}
-.vwave{display:flex;align-items:center;gap:5px;height:40px;visibility:hidden}
-.vbar{width:5px;background:var(--gold);border-radius:3px;animation:vb .8s ease-in-out infinite}
-.vbar:nth-child(1){height:12px}.vbar:nth-child(2){height:24px;animation-delay:.1s}
-.vbar:nth-child(3){height:36px;animation-delay:.2s}.vbar:nth-child(4){height:28px;animation-delay:.3s}
-.vbar:nth-child(5){height:36px;animation-delay:.2s}.vbar:nth-child(6){height:24px;animation-delay:.1s}
-.vbar:nth-child(7){height:12px}
-@keyframes vb{0%,100%{transform:scaleY(.4);opacity:.4}50%{transform:scaleY(1);opacity:1}}
-.vreply{width:100%;max-width:380px;background:var(--ink2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:14px;padding:18px 20px;display:none}
-.vreplytxt{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--ivory);line-height:1.75}
-.vclose{font-size:15px;color:var(--stone);background:none;border:1px solid rgba(201,169,110,0.2);border-radius:20px;padding:10px 24px;cursor:pointer;font-family:var(--sans);margin-top:8px}
-.vclose:active{background:rgba(201,169,110,0.1)}
+.micbtn{width:46px;height:46px;border-radius:50%;background:var(--ink3);border:1px solid rgba(201,169,110,0.25);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.micbtn.listening{border-color:var(--gold);background:rgba(201,169,110,0.15);animation:mp 1s infinite}
+@keyframes mp{0%,100%{box-shadow:0 0 0 0 rgba(201,169,110,0.4)}50%{box-shadow:0 0 0 8px rgba(201,169,110,0)}}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <div class="topbar">
-    <button class="back" onclick="location.href='index.html'">← Command</button>
-    <div class="brand">K<em>airos</em></div>
-    <div class="modes">
-      <button class="mode on" onclick="setMode('strategy',this)">Strategy</button>
-      <button class="mode" onclick="setMode('counsel',this)">Counsel</button>
-      <button class="mode" onclick="setMode('coach',this)">Coach</button>
-    </div>
-  </div>
-
-  <div class="modnav">
-    <a href="m1.html" class="modlink">Morning Briefing</a>
-    <a href="m2.html" class="modlink">Relationships</a>
-    <a href="m3.html" class="modlink">Decision Engine</a>
-    <a href="m4.html" class="modlink">Direction Correction</a>
-    <a href="m5.html" class="modlink">Partner Portal</a>
-    <a href="m6.html" class="modlink">Legacy Vault</a>
-  </div>
-
-  <div class="chat" id="chat">
-    <div class="khead">
-      <svg class="kmark" viewBox="0 0 52 52" fill="none">
-        <polygon points="26,3 44,13 44,33 26,43 8,33 8,13" stroke="#C9A96E" stroke-width="1.5" fill="none"/>
-        <polygon points="26,8 40,16 40,30 26,38 12,30 12,16" stroke="#C9A96E" stroke-width=".7" fill="none" opacity=".3"/>
-        <path d="M26 17C26 17 20 23 21.5 28.5C22.5 32 24.5 34 26 34.5C27.5 34 29.5 32 30.5 28.5C32 23 26 17 26 17Z" fill="#C9A96E"/>
-      </svg>
-      <p class="kname">K<em>airos</em></p>
-      <p class="ksub">Senior Strategic Advisor · Phoenix's Empire</p>
-      <div class="laws">
-        <span class="law">Function</span><span class="law">Flexibility</span>
-        <span class="law">Alignment</span><span class="law">Cost Efficiency</span>
-      </div>
-    </div>
-    <div id="msgs">
-      <div class="msg">
-        <span class="lbl">Kairos · Strategy</span>
-        <div class="bubble k">You have <span id="kdays"></span> days to $2.8B. DIAMODIA is the primary vehicle. PROVENANCE VERIFIED™ must be filed before GitHub goes public.<br><br>What needs my attention today?</div>
-      </div>
-    </div>
-    <div class="qps" id="qps">
-      <button class="qp" onclick="usePrompt(this)">What is my most critical action today?</button>
-      <button class="qp" onclick="usePrompt(this)">Evaluate DIAMODIA Phase 1 plan</button>
-      <button class="qp" onclick="usePrompt(this)">Cambodia sale — $24M floor or hold?</button>
-      <button class="qp" onclick="usePrompt(this)">Path to Property is stuck. Reset strategy.</button>
-      <button class="qp" onclick="usePrompt(this)">Review my 80/20 focus this week</button>
-    </div>
-  </div>
-
-  <div class="inputbar">
-    <div class="inputwrap">
-      <textarea id="inp" placeholder="Ask Kairos…" rows="1"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendText()}"
-        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
-    </div>
-    <button class="micbtn" id="micbtn" onclick="toggleVoiceMode()" title="Voice conversation">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round">
-        <path d="M12 2C10.3 2 9 3.3 9 5v6c0 1.7 1.3 3 3 3s3-1.3 3-3V5c0-1.7-1.3-3-3-3z"/>
-        <path d="M19 10v1a7 7 0 01-14 0v-1"/>
-        <line x1="12" y1="19" x2="12" y2="22"/>
-      </svg>
-    </button>
-    <button class="sendbtn" id="sendbtn" onclick="sendText()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path d="M22 2L11 13" stroke="#0A0906" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#0A0906" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
+<div class="topbar">
+  <button class="back" onclick="location.href='index.html'">← Command</button>
+  <div class="brand">K<em>airos</em></div>
+  <div class="modes">
+    <button class="mode on" onclick="setMode('strategy',this)">Strategy</button>
+    <button class="mode" onclick="setMode('counsel',this)">Counsel</button>
+    <button class="mode" onclick="setMode('coach',this)">Coach</button>
   </div>
 </div>
 
-<!-- VOICE MODAL -->
-<div class="vmodal" id="vmodal">
-  <div style="text-align:center">
-    <p style="font-family:var(--serif);font-size:32px;color:var(--gold);margin-bottom:6px">K<em style="font-style:italic">airos</em></p>
-    <p class="vstatus" id="vstatus">Tap the orb to speak</p>
+<div class="modnav">
+  <a href="m1.html" class="ml">Morning Briefing</a>
+  <a href="m2.html" class="ml">Relationships</a>
+  <a href="m3.html" class="ml">Decision Engine</a>
+  <a href="m4.html" class="ml">Direction Correction</a>
+  <a href="m5.html" class="ml">Partner Portal</a>
+  <a href="m6.html" class="ml">Legacy Vault</a>
+</div>
+
+<div class="chat" id="chat">
+  <div class="khead">
+    <svg width="48" height="48" viewBox="0 0 52 52" fill="none">
+      <polygon points="26,3 44,13 44,33 26,43 8,33 8,13" stroke="#C9A96E" stroke-width="1.5" fill="none"/>
+      <path d="M26 17C26 17 20 23 21.5 28.5C22.5 32 24.5 34 26 34.5C27.5 34 29.5 32 30.5 28.5C32 23 26 17 26 17Z" fill="#C9A96E"/>
+    </svg>
+    <p class="kname">K<em>airos</em></p>
+    <p class="ksub">Senior Strategic Advisor</p>
+    <div class="laws">
+      <span class="law">Function</span><span class="law">Flexibility</span>
+      <span class="law">Alignment</span><span class="law">Cost Efficiency</span>
+    </div>
   </div>
-  <div class="vcard"><p class="vtxt" id="vtxt"></p></div>
-  <button class="vorb" id="vorb" onclick="orbTap()">
-    <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#0A0906" stroke-width="2" stroke-linecap="round">
+
+  <div id="msgs">
+    <div class="msg">
+      <span class="lbl">Kairos</span>
+      <div class="bubble k">You have <span id="kdays"></span> days to $2.8B. What needs my attention today?</div>
+    </div>
+  </div>
+
+  <div class="qps" id="qps">
+    <button class="qp" onclick="useQ(this)">Most critical action today?</button>
+    <button class="qp" onclick="useQ(this)">Evaluate DIAMODIA Phase 1</button>
+    <button class="qp" onclick="useQ(this)">Cambodia — $24M floor or hold?</button>
+    <button class="qp" onclick="useQ(this)">Path to Property reset</button>
+    <button class="qp" onclick="useQ(this)">80/20 focus this week</button>
+  </div>
+</div>
+
+<div class="bar">
+  <div class="wrap">
+    <textarea id="inp" placeholder="Ask Kairos…" rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();go()}"
+      oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+  </div>
+  <button class="micbtn" id="micbtn" onclick="toggleMic()" title="Voice">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round">
       <path d="M12 2C10.3 2 9 3.3 9 5v6c0 1.7 1.3 3 3 3s3-1.3 3-3V5c0-1.7-1.3-3-3-3z"/>
-      <path d="M19 10v1a7 7 0 01-14 0v-1"/>
-      <line x1="12" y1="19" x2="12" y2="22"/>
+      <path d="M19 10v1a7 7 0 01-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/>
     </svg>
   </button>
-  <div class="vwave" id="vwave">
-    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
-    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
-    <div class="vbar"></div>
-  </div>
-  <div class="vreply" id="vreply">
-    <p class="vreplytxt" id="vreplytxt"></p>
-  </div>
-  <button class="vclose" onclick="closeVoice()">← Back to text</button>
+  <button class="send" id="sendbtn" onclick="go()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M22 2L11 13" stroke="#0A0906" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#0A0906" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
 </div>
 
+</div>
 <script>
-// ── CONSTANTS ──
-var SYSTEM = "You are Kairos. Not an assistant. Phoenix's senior strategic advisor.\n\nCharacter: Male. Direct. Surgical. Battle-tested entrepreneur crossed with a billion-dollar fund manager. Every word good enough for a serious board.\n\nRules:\n- One or two options. Never three. Start with the answer then show the work.\n- Push back once when wrong — clearly, with evidence — then commit.\n- Never say 'Great question', 'Absolutely', or 'I'd be happy to'.\n- Every recommendation: Function, Flexibility, Alignment, Cost efficiency.\n\nModes: Strategy (default) = direct business/capital. Counsel = family/personal/father — slower, warmer. Coach = hard days/doubt — patient, reflect first.\n\nEmpire context:\n- Target $2.8B by June 2036. Current $0.05M.\n- DIAMODIA: luxury Cambodian gemstone membership. Veritan Inc (Delaware) parent.\n- Phase 1: Phoenix + Claude only. $4,700/mo. 9 months.\n- 5 Bright Lines to Phase 2: Reg CF $750K+, 50 Gold Seal entries, 1 insurance call, API 1K/day x30, Veritan done.\n- Revenue: Y1 $1.5M → Y3 $8.8M → Y5 $45.7M → Y10 $2.3B.\n- Critical: File PROVENANCE VERIFIED™ at USPTO before GitHub goes public.\n- Husband Dr. Piseth Sim. Three children: Munica 14, TC 10, Vongsa 4. Father 73.\n- Phoenix invisible publicly. Wakes 4am. 5 miles daily. Phoenix AZ. From Cambodia.";
+var WORKER = 'https://kairos-proxy.chealykun25.workers.dev';
+var MODEL  = 'claude-sonnet-4-6';
+var SYS = 'You are Kairos, senior strategic advisor to Phoenix. Direct, surgical, no filler. Empire: DIAMODIA luxury Cambodian gemstone brand, $0.05M now, $2.8B target by 2036. Phase 1: Phoenix+Claude only, $4,700/mo. Critical: File PROVENANCE VERIFIED trademark at USPTO. Three children: Munica 14, TC 10, Vongsa 4. Father 73. 4am wake, 5 miles daily, Phoenix AZ, from Cambodia. Every answer: Function, Flexibility, Alignment, Cost efficiency. One or two options max. Start with the answer.';
 
-// ── STATE ──
 var mode = 'strategy';
 var busy = false;
-var history = [];
+var hist = [];
 
-// ── INIT ──
 document.getElementById('kdays').textContent = Math.ceil((new Date('2036-06-01') - new Date()) / 86400000);
 
-// ── HELPERS ──
 function setMode(m, el) {
   mode = m;
   document.querySelectorAll('.mode').forEach(function(b){ b.classList.remove('on'); });
   el.classList.add('on');
 }
 
-function usePrompt(btn) {
+function useQ(btn) {
   document.getElementById('inp').value = btn.textContent;
-  sendText();
+  go();
 }
 
-function addMsg(role, text) {
+function addMsg(who, text) {
   var msgs = document.getElementById('msgs');
-  var div = document.createElement('div');
-  div.className = 'msg' + (role === 'me' ? ' me' : '');
-  var lbl = role === 'me' ? 'Phoenix' : 'Kairos · ' + mode;
-  var cls = role === 'me' ? 'me' : 'k';
-  var safe = text
-    .replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\n\n/g,'<br><br>')
+  var d = document.createElement('div');
+  d.className = who === 'me' ? 'msg me' : 'msg';
+  var lbl = who === 'me' ? 'Phoenix' : 'Kairos';
+  var cls = who === 'me' ? 'me' : 'k';
+  var safe = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>')
     .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g,'<em>$1</em>');
-  div.innerHTML = '<span class="lbl">' + lbl + '</span><div class="bubble ' + cls + '">' + safe + '</div>';
-  msgs.appendChild(div);
-  document.getElementById('chat').scrollTop = 99999;
+  d.innerHTML = '<span class="lbl">'+lbl+'</span><div class="bubble '+cls+'">'+safe+'</div>';
+  msgs.appendChild(d);
+  setTimeout(function(){ document.getElementById('chat').scrollTop = 999999; }, 50);
 }
 
 function showTyping() {
   var msgs = document.getElementById('msgs');
   var d = document.createElement('div');
-  d.className = 'msg'; d.id = 'typing';
-  d.innerHTML = '<span class="lbl">Kairos · thinking</span><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+  d.className = 'msg'; d.id = 'typ';
+  d.innerHTML = '<span class="lbl">Kairos</span><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
   msgs.appendChild(d);
-  document.getElementById('chat').scrollTop = 99999;
+  setTimeout(function(){ document.getElementById('chat').scrollTop = 999999; }, 50);
 }
 
 function removeTyping() {
-  var t = document.getElementById('typing');
+  var t = document.getElementById('typ');
   if (t) t.remove();
 }
 
-// ── TEXT CHAT ──
-async function sendText() {
+async function go() {
   var inp = document.getElementById('inp');
   var text = inp.value.trim();
   if (!text || busy) return;
-
-  inp.value = '';
-  inp.style.height = 'auto';
+  inp.value = ''; inp.style.height = 'auto';
   document.getElementById('qps').style.display = 'none';
   busy = true;
   document.getElementById('sendbtn').disabled = true;
 
   addMsg('me', text);
-  history.push({role:'user', content:text});
+  hist.push({role:'user', content:text});
   showTyping();
 
+  var modeCtx = mode === 'counsel' ? ' [Counsel mode: personal/family, be warmer]' : mode === 'coach' ? ' [Coach mode: support, reflect first]' : '';
+
   try {
-    var modeNote = mode==='counsel' ? '\n[Counsel mode.]' : mode==='coach' ? '\n[Coach mode.]' : '';
-    var res = await fetch('https://kairos-proxy.chealykun25.workers.dev', {
+    var res = await fetch(WORKER, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: SYSTEM + modeNote,
-        messages: history
+        model: MODEL,
+        max_tokens: 800,
+        system: SYS + modeCtx,
+        messages: hist
       })
     });
     var data = await res.json();
-    var reply = data.content && data.content[0] ? data.content[0].text : 'ERROR: ' + JSON.stringify(data).slice(0,200);
     removeTyping();
-    history.push({role:'assistant', content:reply});
+    var reply = (data.content && data.content[0] && data.content[0].text)
+      ? data.content[0].text
+      : 'Error ' + res.status + ': ' + JSON.stringify(data).slice(0, 150);
+    hist.push({role:'assistant', content:reply});
     addMsg('k', reply);
-  } catch(e) {
+  } catch(err) {
     removeTyping();
-    addMsg('k', 'Connection interrupted. Try again.');
+    addMsg('k', 'Connection error: ' + err.message);
   }
 
   busy = false;
   document.getElementById('sendbtn').disabled = false;
+  document.getElementById('inp').focus();
 }
 
-// ── VOICE CONVERSATION ──
-var vbusy = false;
-var vlistening = false;
-var vspeaking = false;
-var vrec = null;
-var vhistory = [];
-var synth = window.speechSynthesis;
-var kvoice = null;
-
-function loadVoice() {
-  var voices = synth.getVoices();
-  var prefs = ['Daniel','Alex','Google UK English Male','Microsoft David'];
-  for (var p of prefs) {
-    var v = voices.find(function(v){ return v.name.includes(p); });
-    if (v) { kvoice = v; return; }
-  }
-  kvoice = voices.find(function(v){ return v.lang && v.lang.startsWith('en'); }) || voices[0];
-}
-if (synth) { synth.onvoiceschanged = loadVoice; setTimeout(loadVoice, 300); }
-
-function toggleVoiceMode() {
-  document.getElementById('vmodal').classList.add('open');
-  vhistory = [];
-  setvstatus('Tap the orb to speak');
-  document.getElementById('vtxt').textContent = '';
-  document.getElementById('vreply').style.display = 'none';
-}
-
-function closeVoice() {
-  if (synth) synth.cancel();
-  if (vrec) try { vrec.stop(); } catch(e) {}
-  vlistening = false; vspeaking = false; vbusy = false;
-  document.getElementById('vmodal').classList.remove('open');
-  setOrbStyle('idle');
-}
-
-function setvstatus(t) { document.getElementById('vstatus').textContent = t; }
-
-function setOrbStyle(state) {
-  var orb = document.getElementById('vorb');
-  var wave = document.getElementById('vwave');
-  orb.classList.remove('listening','thinking','speaking');
-  if (state==='listen') { orb.classList.add('listening'); wave.style.visibility='visible'; }
-  else if (state==='think') { orb.classList.add('thinking'); wave.style.visibility='hidden'; }
-  else if (state==='speak') { orb.classList.add('speaking'); wave.style.visibility='visible'; }
-  else { wave.style.visibility='hidden'; }
-}
-
-function orbTap() {
-  if (vspeaking) { if(synth) synth.cancel(); afterSpeak(); return; }
-  if (vlistening) { stopListen(); return; }
-  startListen();
-}
-
-function startListen() {
+// Voice
+var rec = null;
+var listening = false;
+function toggleMic() {
+  if (listening) { rec && rec.stop(); return; }
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { setvstatus('Voice not available — use Chrome or Safari'); return; }
-
-  vrec = new SR();
-  vrec.lang = 'en-US';
-  vrec.continuous = false;
-  vrec.interimResults = true;
-
-  vrec.onstart = function() {
-    vlistening = true;
-    setOrbStyle('listen');
-    setvstatus('Listening… tap orb to send');
-    document.getElementById('vtxt').textContent = '';
-    document.getElementById('vreply').style.display = 'none';
+  if (!SR) { addMsg('k', 'Voice not supported on this browser. Type your question.'); return; }
+  rec = new SR();
+  rec.lang = 'en-US'; rec.continuous = false; rec.interimResults = false;
+  rec.onstart = function() {
+    listening = true;
+    document.getElementById('micbtn').classList.add('listening');
   };
-
-  vrec.onresult = function(e) {
-    var interim = '', final = '';
-    for (var i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) final += e.results[i][0].transcript;
-      else interim += e.results[i][0].transcript;
-    }
-    document.getElementById('vtxt').textContent = final || interim;
-    if (final) { vrec.stop(); sendVoice(final); }
+  rec.onresult = function(e) {
+    var t = e.results[0][0].transcript;
+    document.getElementById('inp').value = t;
+    go();
   };
-
-  vrec.onerror = function(e) {
-    setvstatus(e.error === 'not-allowed' ? 'Allow microphone in settings' : 'Tap to try again');
-    stopListen();
-  };
-
-  vrec.onend = function() {
-    vlistening = false;
-    if (!vbusy && !vspeaking) setOrbStyle('idle');
-  };
-
-  try { vrec.start(); } catch(e) { setvstatus('Tap to try again'); }
-}
-
-function stopListen() {
-  vlistening = false;
-  if (vrec) try { vrec.stop(); } catch(e) {}
-  if (!vbusy) { setOrbStyle('idle'); setvstatus('Tap the orb to speak'); }
-}
-
-async function sendVoice(text) {
-  vbusy = true; vlistening = false;
-  setOrbStyle('think');
-  setvstatus('Kairos is thinking…');
-
-  vhistory.push({role:'user', content:text});
-  // Also add to text chat
-  addMsg('me', text);
-  history.push({role:'user', content:text});
-  showTyping();
-
-  try {
-    var modeNote = mode==='counsel' ? '\n[Counsel mode.]' : mode==='coach' ? '\n[Coach mode.]' : '';
-    var res = await fetch('https://kairos-proxy.chealykun25.workers.dev', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 600,
-        system: SYSTEM + modeNote,
-        messages: vhistory
-      })
-    });
-    var data = await res.json();
-    var reply = data.content && data.content[0] ? data.content[0].text : 'Connection error.';
-    var clean = reply.replace(/\*\*/g,'').replace(/\*/g,'').trim();
-
-    vhistory.push({role:'assistant', content:reply});
-    history.push({role:'assistant', content:reply});
-
-    removeTyping();
-    addMsg('k', reply);
-
-    document.getElementById('vreplytxt').textContent = clean;
-    document.getElementById('vreply').style.display = 'block';
-
-    speakIt(clean);
-  } catch(e) {
-    removeTyping();
-    setvstatus('Error — tap to try again');
-    setOrbStyle('idle');
-    vbusy = false;
-  }
-}
-
-function speakIt(text) {
-  if (!synth) { afterSpeak(); return; }
-  vspeaking = true; vbusy = false;
-  setOrbStyle('speak');
-  setvstatus('Kairos is speaking… tap to interrupt');
-  synth.cancel();
-  var utt = new SpeechSynthesisUtterance(text);
-  utt.rate = 0.87; utt.pitch = 0.82; utt.volume = 1;
-  if (kvoice) utt.voice = kvoice;
-  utt.onend = afterSpeak;
-  utt.onerror = afterSpeak;
-  synth.speak(utt);
-}
-
-function afterSpeak() {
-  vspeaking = false;
-  setOrbStyle('listen');
-  setvstatus('Your turn — tap orb to speak');
-  setTimeout(startListen, 600);
-}
-
-
-async function testWorker() {
-  var out = document.getElementById('debug-result');
-  out.textContent = 'Testing...';
-  try {
-    var res = await fetch('https://kairos-proxy.chealykun25.workers.dev', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 20,
-        messages: [{role:'user', content:'Say: online'}]
-      })
-    });
-    var text = await res.text();
-    out.style.color = res.ok ? '#4ADE80' : '#F87171';
-    out.textContent = 'Status ' + res.status + ': ' + text.slice(0,300);
-  } catch(e) {
-    out.style.color = '#F87171';
-    out.textContent = 'Error: ' + e.message;
-  }
-}
-
-// SW
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/iamcommander/sw.js').catch(function(){});
+  rec.onerror = function() { listening = false; document.getElementById('micbtn').classList.remove('listening'); };
+  rec.onend = function() { listening = false; document.getElementById('micbtn').classList.remove('listening'); };
+  rec.start();
 }
 </script>
 </body>
