@@ -439,7 +439,7 @@ textarea::placeholder{color:rgba(138,122,96,0.6)}
 
   <!-- VOICE BAR -->
   <div class="voice-bar">
-    <button class="voice-toggle" id="voiceToggle" onclick="toggleVoice()">
+    <button class="voice-toggle" id="voiceToggle">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
         <path d="M12 18.5C15.5 18.5 18.5 15.5 18.5 12V7C18.5 3.5 15.5 0.5 12 0.5C8.5 0.5 5.5 3.5 5.5 7V12C5.5 15.5 8.5 18.5 12 18.5Z" stroke="currentColor" stroke-width="1.5"/>
         <path d="M3 12C3 16.97 7.03 21 12 21C16.97 21 21 16.97 21 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -571,105 +571,253 @@ function usePrompt(btn) {
 }
 
 
-// ── VOICE ──────────────────────────────────────────────────────────────
-var voiceOn = false;
-var listening = false;
-var recognition = null;
+// ── VOICE CONVERSATION ──────────────────────────────────────────────────
+var vmode = false;
+var vlistening = false;
+var vspeaking = false;
+var vrec = null;
 var synth = window.speechSynthesis;
-var kairosVoice = null;
+var kVoice = null;
+var vHistory = [];
 
-// Find best voice for Kairos (deep, male, English)
-function loadVoice() {
+// Load best voice
+function loadVoice(){
   var voices = synth.getVoices();
-  var preferred = ['Daniel','Alex','Google UK English Male','Microsoft David','en-GB','en-US'];
-  for (var p of preferred) {
-    var v = voices.find(function(v){ return v.name.includes(p) || v.lang === p; });
-    if (v) { kairosVoice = v; break; }
+  var prefs = ['Daniel','Alex','Google UK English Male','Microsoft David - English','en-GB'];
+  for(var p of prefs){
+    var v = voices.find(function(v){return v.name.includes(p)||v.lang===p;});
+    if(v){kVoice=v;break;}
   }
-  if (!kairosVoice && voices.length) kairosVoice = voices[0];
+  if(!kVoice) kVoice = voices.find(function(v){return v.lang.startsWith('en');}) || voices[0];
 }
 synth.onvoiceschanged = loadVoice;
-loadVoice();
+setTimeout(loadVoice, 500);
 
-function toggleVoice() {
-  voiceOn = !voiceOn;
-  var btn = document.getElementById('voiceToggle');
-  btn.classList.toggle('on', voiceOn);
-  btn.querySelector('svg').nextSibling ? null : null;
-  btn.childNodes[btn.childNodes.length-1].textContent = voiceOn ? 'Voice on' : 'Voice off';
-  if (!voiceOn) synth.cancel();
-  document.getElementById('voiceStatus').textContent = voiceOn ? 'Kairos will speak his responses' : '';
+// Open voice mode
+document.getElementById('voiceToggle').onclick = function(){
+  document.getElementById('voiceModal').style.display='flex';
+  vmode = true;
+  vHistory = [...history]; // carry over text history
+  setVStatus('Tap the orb to speak');
+};
+
+function closeVoice(){
+  synth.cancel();
+  if(vrec) try{vrec.stop();}catch(e){}
+  vlistening = false; vspeaking = false;
+  document.getElementById('voiceModal').style.display='none';
+  vmode = false;
 }
 
-function speak(text) {
-  if (!voiceOn) return;
+function setVStatus(txt){ document.getElementById('vStatus').textContent = txt; }
+function setVTranscript(txt){ document.getElementById('vTranscript').textContent = txt; }
+
+function setOrbState(state){
+  var orb = document.getElementById('vOrb');
+  var wave = document.getElementById('vWave');
+  if(state==='listen'){
+    orb.style.background='linear-gradient(135deg,#E8D5A8,#C9A96E)';
+    orb.classList.add('orb-listen');
+    wave.style.visibility='visible';
+  } else if(state==='think'){
+    orb.style.background='linear-gradient(135deg,#4A4236,#2E2A24)';
+    orb.classList.remove('orb-listen');
+    wave.style.visibility='hidden';
+  } else if(state==='speak'){
+    orb.style.background='linear-gradient(135deg,#5A8A5A,#3A6A3A)';
+    orb.classList.remove('orb-listen');
+    wave.style.visibility='visible';
+  } else {
+    orb.style.background='linear-gradient(135deg,#C9A96E,#9A7230)';
+    orb.classList.remove('orb-listen');
+    wave.style.visibility='hidden';
+  }
+}
+
+function orbTap(){
+  if(vspeaking){ synth.cancel(); afterSpeak(); return; }
+  if(vlistening){ stopListen(); return; }
+  startListen();
+}
+
+function startListen(){
+  var SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ setVStatus('Speech not supported — try Chrome or Safari'); return; }
+  vrec = new SR();
+  vrec.lang='en-US';
+  vrec.continuous=false;
+  vrec.interimResults=true;
+  vrec.maxAlternatives=1;
+
+  vrec.onstart=function(){
+    vlistening=true;
+    setOrbState('listen');
+    setVStatus('Listening… tap orb to stop');
+    setVTranscript('');
+    document.getElementById('vResponse').style.display='none';
+  };
+  vrec.onresult=function(e){
+    var interim='', final='';
+    for(var i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal) final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    setVTranscript(final||interim);
+    if(final){ vrec.stop(); sendVoice(final); }
+  };
+  vrec.onerror=function(e){
+    setVStatus(e.error==='not-allowed'?'Mic permission denied — check settings':'Could not hear you. Tap to try again.');
+    stopListen();
+  };
+  vrec.onend=function(){ vlistening=false; if(!vspeaking) setOrbState('idle'); };
+  try{ vrec.start(); }catch(e){ setVStatus('Tap to try again'); }
+}
+
+function stopListen(){
+  vlistening=false;
+  if(vrec) try{vrec.stop();}catch(e){}
+  setOrbState('idle');
+  setVStatus('Tap the orb to speak');
+}
+
+async function sendVoice(text){
+  vlistening=false;
+  setOrbState('think');
+  setVStatus('Kairos is thinking…');
+  setVTranscript(text);
+
+  vHistory.push({role:'user',content:text});
+
+  try{
+    var modeNote = mode==='counsel'?'
+[Counsel mode.]':mode==='coach'?'
+[Coach mode.]':'';
+    var res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:600,
+        system:SYSTEM+modeNote,
+        messages:vHistory
+      })
+    });
+    var data = await res.json();
+    var reply = data.content&&data.content[0]?data.content[0].text:'Connection lost.';
+    vHistory.push({role:'assistant',content:reply});
+
+    // Show response text
+    var clean = reply.replace(/\*\*/g,'').replace(/\*/g,'').trim();
+    document.getElementById('vResponseText').textContent = clean;
+    document.getElementById('vResponse').style.display='block';
+
+    // Also add to text chat
+    addMsg('k', reply);
+    history.push({role:'user',content:text});
+    history.push({role:'assistant',content:reply});
+
+    speakResponse(clean);
+  }catch(e){
+    setVStatus('Error — tap to try again');
+    setOrbState('idle');
+  }
+}
+
+function speakResponse(text){
+  vspeaking=true;
+  setOrbState('speak');
+  setVStatus('Kairos is speaking… tap orb to interrupt');
   synth.cancel();
-  var clean = text.replace(/<[^>]*>/g,'').replace(/\*+/g,'').trim();
-  var utt = new SpeechSynthesisUtterance(clean);
-  utt.rate = 0.88;
-  utt.pitch = 0.85;
-  utt.volume = 1;
-  if (kairosVoice) utt.voice = kairosVoice;
+  var utt = new SpeechSynthesisUtterance(text);
+  utt.rate=0.86;
+  utt.pitch=0.82;
+  utt.volume=1;
+  if(kVoice) utt.voice=kVoice;
+  utt.onend=afterSpeak;
+  utt.onerror=afterSpeak;
   synth.speak(utt);
 }
 
-// Setup speech recognition
-function setupRecognition() {
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    document.getElementById('voiceStatus').textContent = 'Voice input not supported on this browser';
-    return null;
-  }
-  var r = new SR();
-  r.continuous = false;
-  r.interimResults = true;
-  r.lang = 'en-US';
-
-  r.onstart = function() {
-    listening = true;
-    document.getElementById('micbtn').classList.add('listening');
-    document.getElementById('voiceStatus').textContent = 'Listening…';
-  };
-  r.onresult = function(e) {
-    var transcript = Array.from(e.results).map(function(r){ return r[0].transcript; }).join('');
-    document.getElementById('inp').value = transcript;
-    if (e.results[e.results.length-1].isFinal) {
-      document.getElementById('voiceStatus').textContent = '';
-      send();
-    }
-  };
-  r.onerror = function(e) {
-    document.getElementById('voiceStatus').textContent = 'Try again';
-    stopListening();
-  };
-  r.onend = function() { stopListening(); };
-  return r;
+function afterSpeak(){
+  vspeaking=false;
+  setOrbState('listen');
+  setVStatus('Your turn — tap orb or speak now');
+  setTimeout(startListen, 500);
 }
-
-function stopListening() {
-  listening = false;
-  document.getElementById('micbtn').classList.remove('listening');
-  if (document.getElementById('voiceStatus').textContent === 'Listening…')
-    document.getElementById('voiceStatus').textContent = '';
-}
-
-function toggleMic() {
-  if (listening) {
-    if (recognition) recognition.stop();
-    return;
-  }
-  recognition = setupRecognition();
-  if (recognition) recognition.start();
-}
-
-// Override addMsg to also speak Kairos responses
-var _origAddMsg = addMsg;
-window._kSpeak = function(text) { speak(text); };
 
 // Service worker
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/iamcommander/sw.js').catch(function(){});
 }
 </script>
+
+<!-- VOICE CONVERSATION MODAL -->
+<div id="voiceModal" style="display:none;position:fixed;inset:0;background:#0A0906;z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:28px">
+
+  <!-- Status -->
+  <div style="text-align:center">
+    <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:32px;font-weight:300;color:#C9A96E;letter-spacing:.08em;margin-bottom:8px">K<em style="font-style:italic">airos</em></p>
+    <p id="vStatus" style="font-size:15px;color:#8A7A60;letter-spacing:.05em">Tap the orb to speak</p>
+  </div>
+
+  <!-- Transcript display -->
+  <div style="width:90%;max-width:380px;min-height:80px;background:#141210;border:1px solid rgba(201,169,110,0.15);border-radius:16px;padding:16px 20px;text-align:center">
+    <p id="vTranscript" style="font-size:17px;color:#F5F0E8;line-height:1.6;font-family:'DM Sans',system-ui,sans-serif;font-weight:300;min-height:26px"></p>
+  </div>
+
+  <!-- ORB (tap to speak) -->
+  <button id="vOrb" onclick="orbTap()" style="width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#9A7230);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 40px rgba(201,169,110,0.35);transition:all .2s;flex-shrink:0">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0A0906" stroke-width="2" stroke-linecap="round">
+      <path d="M12 18.5C15.5 18.5 18.5 15.5 18.5 12V7C18.5 3.5 15.5 0.5 12 0.5C8.5 0.5 5.5 3.5 5.5 7V12C5.5 15.5 8.5 18.5 12 18.5Z"/>
+      <path d="M3 12C3 16.97 7.03 21 12 21C16.97 21 21 16.97 21 12"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+    </svg>
+  </button>
+
+  <!-- Waveform (visible when listening) -->
+  <div id="vWave" style="display:flex;align-items:center;gap:5px;height:40px;visibility:hidden">
+    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+    <div class="vbar"></div>
+  </div>
+
+  <!-- Response -->
+  <div id="vResponse" style="width:90%;max-width:380px;display:none">
+    <div style="background:#141210;border:1px solid rgba(201,169,110,0.2);border-left:3px solid #C9A96E;border-radius:14px;padding:18px 20px">
+      <p id="vResponseText" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:300;color:#F5F0E8;line-height:1.75"></p>
+    </div>
+  </div>
+
+  <!-- Close -->
+  <button onclick="closeVoice()" style="font-family:'DM Sans',system-ui,sans-serif;font-size:14px;color:#8A7A60;background:none;border:1px solid rgba(201,169,110,0.15);border-radius:20px;padding:10px 24px;cursor:pointer;margin-top:8px">
+    ← Back to text
+  </button>
+
+</div>
+
+<style>
+.vbar{
+  width:5px;background:var(--gold);border-radius:3px;
+  animation:vbounce 0.8s ease-in-out infinite;
+}
+.vbar:nth-child(1){height:12px;animation-delay:0s}
+.vbar:nth-child(2){height:24px;animation-delay:.1s}
+.vbar:nth-child(3){height:36px;animation-delay:.2s}
+.vbar:nth-child(4){height:28px;animation-delay:.3s}
+.vbar:nth-child(5){height:36px;animation-delay:.2s}
+.vbar:nth-child(6){height:24px;animation-delay:.1s}
+.vbar:nth-child(7){height:12px;animation-delay:0s}
+@keyframes vbounce{
+  0%,100%{transform:scaleY(.5);opacity:.5}
+  50%{transform:scaleY(1);opacity:1}
+}
+.orb-listen{animation:orbpulse 1.2s infinite!important}
+@keyframes orbpulse{
+  0%,100%{box-shadow:0 8px 40px rgba(201,169,110,0.35)}
+  50%{box-shadow:0 8px 60px rgba(201,169,110,0.7),0 0 0 20px rgba(201,169,110,0.1)}
+}
+</style>
+
 </body>
 </html>
