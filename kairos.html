@@ -87,6 +87,74 @@ textarea::placeholder{color:var(--stone)}
 .qp{font-family:var(--sans);font-size:11px;font-weight:300;color:var(--stone);padding:5px 12px;border:0.5px solid var(--border2);border-radius:20px;cursor:pointer;background:none;transition:all .12s;text-align:left}
 .qp:hover{color:var(--ivory);border-color:rgba(240,236,224,0.25);background:rgba(240,236,224,0.03)}
 </style>
+
+<style>
+/* ── KAIROS MOBILE FIX ── */
+html, body { font-size: 16px; }
+
+/* Top bar */
+.topbar { height: 52px; padding: 0 16px; }
+.back-btn { font-size: 13px; padding: 7px 13px; }
+.tb-title { font-size: 15px; }
+.mode-pill { font-size: 11px; padding: 6px 13px; }
+
+/* Module nav bar */
+.modules-bar {
+  padding: 10px 14px;
+  gap: 6px;
+}
+.modules-bar a {
+  font-size: 11px !important;
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
+  white-space: nowrap;
+}
+
+/* Kairos header */
+.kairos-head { padding: 24px 0 20px; }
+.kairos-name { font-size: 36px; }
+.kairos-sub { font-size: 11px; letter-spacing: .2em; }
+.law-pill { font-size: 10px; padding: 4px 10px; }
+
+/* Chat messages */
+.messages { gap: 20px; }
+.msg-role { font-size: 10px; margin-bottom: 8px; }
+.msg-bubble.k {
+  font-size: 17px !important;
+  line-height: 1.75 !important;
+  padding: 16px 18px !important;
+}
+.msg-bubble.p {
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  padding: 13px 16px !important;
+}
+
+/* Quick prompts */
+.qp {
+  font-size: 13px !important;
+  padding: 8px 14px !important;
+  border-radius: 22px !important;
+}
+
+/* Input area */
+.input-area { padding: 14px 16px; gap: 10px; }
+.input-wrap { padding: 12px 14px; border-radius: 12px; }
+textarea {
+  font-size: 16px !important; /* prevents iOS zoom on focus */
+  line-height: 1.5 !important;
+  min-height: 24px !important;
+}
+.send-btn {
+  width: 44px !important;
+  height: 44px !important;
+  flex-shrink: 0;
+}
+.send-btn svg { width: 18px; height: 18px; }
+
+/* Wrap padding */
+.wrap { padding-bottom: 80px; }
+</style>
 </head>
 <body>
 <div class="topbar">
